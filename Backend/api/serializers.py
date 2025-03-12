@@ -26,15 +26,32 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser  
         fields = "__all__"
 
+
+class PostImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostImage
+        fields = ['id', 'image']
+
+
 class PostSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     hashtags = serializers.SerializerMethodField()
+    images = PostImageSerializer(many=True, required=False)
     views = serializers.IntegerField(default=0, read_only=True)
 
     class Meta:
         model = Post
-        fields = ['post_id', 'user', 'caption', 'created_at', 'likes_count', 'comments_count', 'hashtags', 'views']
+        fields = ['post_id', 'user', 'images' , 'caption', 'created_at', 'likes_count', 'comments_count', 'hashtags', 'views']
+        
+    def create(self, validated_data):
+        images_data = self.context['request'].FILES.getlist('images')
+        post = Post.objects.create(**validated_data)
+
+        for image in images_data:
+            PostImage.objects.create(post=post, image=image)
+
+        return post
         
     def get_likes_count(self, obj):
         post_type = ContentType.objects.get_for_model(Post)

@@ -27,6 +27,39 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SIMPLE_JWT = {
+    "USER_ID_FIELD": "user_id",  # Use "user_id" instead of "id"
+}
+
+# CORS Configuration
+CORS_ALLOW_ALL_ORIGINS = False  # Change to True if you want to allow all origins (not recommended for production)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # React frontend URL
+]
+
+CORS_ALLOW_CREDENTIALS = True  # Allow cookies and authentication headers
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+# Allow specific HTTP methods
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+# Allow specific headers
+CORS_ALLOW_HEADERS = [
+    "Authorization",
+    "Content-Type",
+    "X-CSRFToken",
+]
+
 
 # Application definition
 
@@ -45,11 +78,15 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+        'api.authentication.CookiesJWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

@@ -6,6 +6,7 @@ from django.core.validators import RegexValidator
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from datetime import timedelta
+from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 class CustomUser(AbstractUser):
@@ -31,6 +32,10 @@ class CustomUser(AbstractUser):
     )
     profile_pic = models.ImageField(upload_to="profile_pics/", null=True, blank=True)
 
+    @property
+    def id(self):
+        return self.user_id  # Ensure 'id' is mapped to 'user_id'
+        
     def __str__(self):
         return self.user_id
 
@@ -38,7 +43,6 @@ class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
     caption = models.CharField(max_length=100)
-    views = serializers.IntegerField(default=0, read_only=True)
     created_at = models.DateTimeField(auto_now_add=True , db_index=True)
 
     def __str__(self):
@@ -53,7 +57,6 @@ class PostImage(models.Model):
 
     def __str__(self):
         return f"Image {self.id} for Post {self.post.post_id}"
-    
 
 
 class Hashtag(models.Model):

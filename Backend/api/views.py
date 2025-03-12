@@ -10,6 +10,80 @@ from api.serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from rest_framework.permissions import IsAuthenticated , AllowAny
 
+
+# Custom Token Obtain Pair View
+class CoustomTokenObtainPairView(TokenObtainPairView):  
+    def post(self , req , *args , **kwargs):
+        try:
+          response = super().post(req , *args , **kwargs)
+          token = response.data
+
+          access_token = token ['access']
+          refresh_token = token ['refresh']
+
+          res = Response()
+
+          res.data = {'success' : True}
+
+          res.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite='None',
+            path='/'
+          )
+
+          res.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite='None',
+            path='/'
+          )
+
+
+          return res
+        except:
+          return Response({'success': False})
+
+
+# Custom Refresh Token View
+class CoustomRefreshTokenView(TokenRefreshView):
+  def post(self , req , *args , **kwargs):
+    try:
+      refresh_token = req.COOKIES.get('refresh_token')
+
+      if not refresh_token:
+         return Response({'refreshed': False, 'error': 'No refresh token found in cookies'}, status=400)
+
+      req.data['refresh'] = refresh_token
+
+      response = super().post(req , *args , **kwargs)
+
+      tokens = response.data 
+      access_token = tokens['access']
+      
+      res = Response()    
+
+      res.data = {'refreshed' : True}   
+
+      res.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=True,
+        samesite='None',
+        path='/'
+      )
+      return res
+    except:
+      return Response({'refreshed' : False})
+
+
+
+
 # Create your views here.
 
 @api_view(['POST'])
@@ -17,12 +91,30 @@ from rest_framework.permissions import IsAuthenticated , AllowAny
 def register(request):
     serializer = UserRegisterSerializer(data=request.data)
     if serializer.is_valid():
-        user = serializer.save()
+        user = serializer.save()  
         return Response(
             {"message": "User registered successfully!", "user_id": user.user_id},
             status=status.HTTP_201_CREATED
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def logout(req):
+  try:
+    res = Response()
+    res.data = {'logout_success':True}
+    res .delete_cookie('access_token' , path='/' , samesite='None') 
+    res .delete_cookie('refresh_token' , path='/' , samesite='None')
+
+    return res
+  except:
+    return Response({'logout_success':False})
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def authentication_chk(req):
+ return Response({"authenticated":True})
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
