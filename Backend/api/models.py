@@ -22,6 +22,7 @@ class CustomUser(AbstractUser):
         null=False,
         primary_key=True
     )
+    nickname = models.CharField(max_length=50, default="NewUser")
     email = models.EmailField(unique=True)
     bio = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
