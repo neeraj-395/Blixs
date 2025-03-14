@@ -10,19 +10,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 class CustomUser(AbstractUser):
-    user_id = models.CharField(
-        unique=True,
-        max_length=15,
-        validators=[
-            RegexValidator(
-                regex=r'^[a-z0-9_]+$',  
-                message="User ID can only contain lowercase letters and underscores (_)."
-            )
-        ],
-        null=False,
-        primary_key=True
-    )
-    nickname = models.CharField(max_length=50, default="NewUser")
+    user_id = models.AutoField(primary_key=True)
     email = models.EmailField(unique=True)
     bio = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)

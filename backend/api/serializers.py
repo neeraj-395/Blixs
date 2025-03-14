@@ -7,15 +7,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['user_id', 'email', 'password', 'bio', 'gender', 'profile_pic']
+        fields = ['username', 'email', 'password', 'bio', 'gender', 'profile_pic']
 
     def create(self, validated_data):
         user = CustomUser(
-            user_id=validated_data['user_id'],
+            username=validated_data['username'],
             email=validated_data['email'],
-            bio=validated_data.get('bio', ''),  # Default to empty bio if not provided
-            gender=validated_data.get('gender', 'P'),  # Default to 'Prefer not to say'
-            profile_pic=validated_data.get('profile_pic', None)  # Default to None
+            bio=validated_data.get('bio', ''),
+            gender=validated_data.get('gender', 'P'),
+            profile_pic=validated_data.get('profile_pic', None)
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -24,7 +24,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser  
-        fields = "__all__"
+        fields = ['username', 'email', 'bio', 'gender', 'profile_pic']
 
 
 class PostImageSerializer(serializers.ModelSerializer):

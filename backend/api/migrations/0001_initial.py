@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
-                ('user_id', models.CharField(max_length=15, primary_key=True, serialize=False, unique=True, validators=[django.core.validators.RegexValidator(message='User ID can only contain lowercase letters and underscores (_).', regex='^[a-z0-9_]+$')])),
+                ('user_id', models.AutoField(primary_key=True)),
                 ('email', models.EmailField(max_length=254, unique=True)),
                 ('bio', models.CharField(blank=True, max_length=100)),
                 ('created_at', models.DateTimeField(auto_now_add=True, db_index=True)),
