@@ -1,18 +1,16 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework import viewsets 
+from django.shortcuts import get_object_or_404
 from api.models import *
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
-from django.shortcuts import get_object_or_404
 from api.serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from rest_framework.permissions import IsAuthenticated , AllowAny
 
 
 # Custom Token Obtain Pair View
-class CoustomTokenObtainPairView(TokenObtainPairView):  
+class CustomTokenObtainPairView(TokenObtainPairView):  
     def post(self , req , *args , **kwargs):
         try:
           response = super().post(req , *args , **kwargs)
@@ -50,7 +48,7 @@ class CoustomTokenObtainPairView(TokenObtainPairView):
 
 
 # Custom Refresh Token View
-class CoustomRefreshTokenView(TokenRefreshView):
+class CustomRefreshTokenView(TokenRefreshView):
   def post(self , req , *args , **kwargs):
     try:
       refresh_token = req.COOKIES.get('refresh_token')
@@ -217,75 +215,3 @@ def get_messages(req):
     messages = Message.objects.filter(recipient=req.user)
     serializer = MessageSerializer(messages, many=True)
     return Response(serializer.data)
-
-
-
-# Custom Token Obtain Pair View
-# class CustomTokenObtainPairView(TokenObtainPairView):  
-#     def post(self , req , *args , **kwargs):
-#         try:
-#           response = super().post(req , *args , **kwargs)
-#           token = response.data
-
-#           access_token = token ['access']
-#           refresh_token = token ['refresh']
-
-#           res = Response()
-
-#           res.data = {'success' : True}
-
-#           res.set_cookie(
-#             key="access_token",
-#             value=access_token,
-#             httponly=True,
-#             secure=True,
-#             samesite='None',
-#             path='/'
-#           )
-
-#           res.set_cookie(
-#             key="refresh_token",
-#             value=refresh_token,
-#             httponly=True,
-#             secure=True,
-#             samesite='None',
-#             path='/'
-#           )
-
-
-#           return res
-#         except:
-#           return Response({'success': False})
-
-
-# # Custom Refresh Token View
-# class CustomRefreshTokenView(TokenRefreshView):
-#   def post(self , req , *args , **kwargs):
-#     try:
-#       refresh_token = req.COOKIES.get('refresh_token')
-
-#       if not refresh_token:
-#          return Response({'refreshed': False, 'error': 'No refresh token found in cookies'}, status=400)
-
-#       req.data['refresh'] = refresh_token
-
-#       response = super().post(req , *args , **kwargs)
-
-#       tokens = response.data 
-#       access_token = tokens['access']
-      
-#       res = Response()    
-
-#       res.data = {'refreshed' : True}   
-
-#       res.set_cookie(
-#         key="access_token",
-#         value=access_token,
-#         httponly=True,
-#         secure=True,
-#         samesite='None',
-#         path='/'
-#       )
-#       return res
-#     except:
-#       return Response({'refreshed' : False})
