@@ -24,7 +24,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser  
-        fields = ['username', 'email', 'bio', 'gender', 'profile_pic']
+        fields = ['user_id', 'username', 'email', 'bio', 'gender', 'profile_pic']
 
 
 class PostImageSerializer(serializers.ModelSerializer):

@@ -1,18 +1,15 @@
-from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework import viewsets 
 from api.models import *
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
-from django.shortcuts import get_object_or_404k
 from api.serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from rest_framework.permissions import IsAuthenticated , AllowAny
 
 
 # Custom Token Obtain Pair View
-class CoustomTokenObtainPairView(TokenObtainPairView):  
+class CustomTokenObtainPairView(TokenObtainPairView):  
     def post(self , req , *args , **kwargs):
         try:
           response = super().post(req , *args , **kwargs)
@@ -50,7 +47,7 @@ class CoustomTokenObtainPairView(TokenObtainPairView):
 
 
 # Custom Refresh Token View
-class CoustomRefreshTokenView(TokenRefreshView):
+class CustomRefreshTokenView(TokenRefreshView):
   def post(self , req , *args , **kwargs):
     try:
       refresh_token = req.COOKIES.get('refresh_token')

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login_try } from "../Endpoints/Api";
+import { login_try } from "../endpoints/Api";
 // import { useNavigate } from "react-router-dom";
 // import { useAuth } from "../context/useAuth";
 
