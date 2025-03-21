@@ -9,6 +9,7 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('authenticate/', authentication_chk, name='authenticate'),
     path('users/', get_all_users, name='get-all-users'),
+    path('user/', get_self, name='get-self'),
     path('posts/self/', get_self_posts, name='get-self-posts'),
     path('posts/', get_all_posts, name='get-all-posts'),
     path('posts/create/', create_post, name='create-post'),

@@ -22,48 +22,58 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user
 
 class UserSerializer(serializers.ModelSerializer):
+    user_followers = serializers.SerializerMethodField()
+    user_following = serializers.SerializerMethodField()
+    post_num = serializers.SerializerMethodField()
     class Meta:
-        model = CustomUser  
-        fields = ['user_id', 'username', 'email', 'bio', 'gender', 'profile_pic']
+        model = CustomUser
+        fields = ['user_id', 'username', 'email', 'bio', 'gender', 'profile_pic', 'user_followers', 'user_following', 'post_num']
 
+    def get_user_followers(self,obj):
+        return Followers.objects.filter(following=obj).count()
 
-class PostImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostImage
-        fields = ['id', 'image']
+    def get_user_following(self,obj):
+        return Followers.objects.filter(follower=obj).count()
 
+    def get_post_num(self,obj):
+        return Post.objects.filter(user=obj).count()
 
 class PostSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     hashtags = serializers.SerializerMethodField()
-    images = PostImageSerializer(many=True, required=False)
+    images = serializers.ListField(child=serializers.ImageField(), write_only=True, required=False)
+    image_urls = serializers.SerializerMethodField(read_only=True)
     views = serializers.IntegerField(default=0, read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Post
-        fields = ['post_id', 'user', 'images' , 'caption', 'created_at', 'likes_count', 'comments_count', 'hashtags', 'views']
-        
+        fields = ['post_id', 'user', 'caption', 'created_at', 'likes_count', 'comments_count', 
+                  'hashtags', 'views', 'images', 'image_urls']
+
     def create(self, validated_data):
-        images_data = self.context['request'].FILES.getlist('images')
+        images_data = validated_data.pop('images', [])
         post = Post.objects.create(**validated_data)
 
-        for image in images_data:
-            PostImage.objects.create(post=post, image=image)
+        # Save images to PostImage model
+        PostImage.objects.bulk_create([
+            PostImage(post=post, image=image) for image in images_data
+        ])
 
         return post
-        
+
+    def get_image_urls(self, obj):
+        return [img.image.url for img in obj.images.all()]
+
     def get_likes_count(self, obj):
-        post_type = ContentType.objects.get_for_model(Post)
-        return Like.objects.filter(content_type=post_type, object_id=obj.post_id).count()
-    
+        return Like.objects.filter(post=obj).count()
+
     def get_comments_count(self, obj):
-        post_type = ContentType.objects.get_for_model(Post)
-        return Comment.objects.filter(content_type=post_type, object_id=obj.post_id).count()
-    
+        return Comment.objects.filter(post=obj).count()
+
     def get_hashtags(self, obj):
-        post_type = ContentType.objects.get_for_model(Post)
-        return list(Hashtag.objects.filter(content_type=post_type, object_id=obj.post_id).values_list('tag', flat=True))
+        return list(Hashtag.objects.filter(post=obj).values_list('tag', flat=True))
 
 class HashtagSerializer(serializers.ModelSerializer):
     class Meta:

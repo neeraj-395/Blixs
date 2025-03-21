@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from api.models import *
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import status
+from django.views.decorators.csrf import csrf_exempt
 from api.serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView , TokenRefreshView
 from rest_framework.permissions import IsAuthenticated , AllowAny
@@ -46,7 +47,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         except:
           return Response({'success': False})
 
-
 # Custom Refresh Token View
 class CustomRefreshTokenView(TokenRefreshView):
   def post(self , req , *args , **kwargs):
@@ -80,10 +80,8 @@ class CustomRefreshTokenView(TokenRefreshView):
       return Response({'refreshed' : False})
 
 
-
-
 # Create your views here.
-
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -119,6 +117,12 @@ def authentication_chk(req):
 def get_all_users(request):
     users = CustomUser.objects.all()
     serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_self(request):
+    serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
 @api_view(['GET'])

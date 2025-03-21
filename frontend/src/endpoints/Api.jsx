@@ -8,7 +8,33 @@ const REFRESH_URL = `${BASE_API}api/token/refresh/`;
 const LOGOUT_URL = `${BASE_API}api/logout/`;
 const AUTH_URL = `${BASE_API}api/authenticated/`;
 const ALL_POST_URL = `${BASE_API}api/posts/`;
+const USER_URL = `${BASE_API}api/user/`;
 const SELF_POST_URL = `${BASE_API}api/posts/self/`;
+const REGISTER = `${BASE_API}api/register/`;
+
+export const user = async () => {
+  try {
+    const response = await axios.get(USER_URL, { withCredentials: true });
+    console.log("User Info :  ", response.data);
+    return response.data;
+  } catch (error) {
+    return call_refresh(
+      error,
+      axios.get(USER_URL, { withCredentials: true })
+    );
+  }
+};
+
+export const register = async (userData) => {
+  try {
+    const response = await axios.post(REGISTER, userData);
+    console.log("Registration Success: ", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Registration Failed: ", error.response?.data || error.message);
+    return false;
+  }
+};
 
 export const get_all_post = async () => {
   try {
@@ -18,6 +44,18 @@ export const get_all_post = async () => {
     return call_refresh(
       error,
       axios.get(ALL_POST_URL, { withCredentials: true })
+    );
+  }
+};
+
+export const get_self_post = async () => {
+  try {
+    const response = await axios.get(SELF_POST_URL, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    return call_refresh(
+      error,
+      axios.get(SELF_POST_URL, { withCredentials: true })
     );
   }
 };
@@ -50,20 +88,32 @@ export const logout_try = async () => {
   }
 };
 
-export const refresh_token = () => {
-  const res = axios.post(REFRESH_URL, {}, { withCredentials: true });
-  return res.data.refreshed;
+export const refresh_token = async () => {
+  const res = await axios.post(REFRESH_URL, {}, { withCredentials: true });
+  return res.data.refreshed || false;
 };
 
 export const call_refresh = async (error, fun) => {
-  if (error.response || error.response.status === 401) {
-    const token_refreshed = await refresh_token();
+  if (error.response?.status === 401) {
+    console.warn("Token expired. Attempting to refresh...");
 
+    const token_refreshed = await refresh_token();
     if (token_refreshed) {
-      const retry_response = await fun();
-      return retry_response.data;
+      console.log("Token refreshed. Retrying request...");
+      try {
+        const retry_response = await fun();
+        return retry_response?.data;
+      } catch (retryError) {
+        console.error("Retry failed:", retryError.response?.data || retryError.message);
+        return false;
+      }
+    } else {
+      console.error("Token refresh failed. User might need to re-login.");
+      return false;
     }
   }
+
+  console.error("Error during request:", error.response?.data || error.message);
   return false;
 };
 

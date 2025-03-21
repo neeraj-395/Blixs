@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -10,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 class CustomUser(AbstractUser):
     user_id = models.AutoField(primary_key=True)
+    user_uid = models.CharField(max_length=50,default='null')
     email = models.EmailField(unique=True)
     bio = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -25,27 +27,18 @@ class CustomUser(AbstractUser):
         return self.user_id  # Ensure 'id' is mapped to 'user_id'
         
     def __str__(self):
-        return self.user_id
+        return f"{self.username} "
+
 
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
     caption = models.CharField(max_length=100)
+    image = ArrayField(models.ImageField(upload_to="posts/%Y/%m/%d/"), size=5 ,blank=True ,null=True)
     created_at = models.DateTimeField(auto_now_add=True , db_index=True)
 
     def __str__(self):
       return f"Post {self.post_id} by {self.user.user_id} - {self.caption[:20]}..."
-
-class PostImage(models.Model):
-    def post_image_upload_path(instance, filename):
-        return f"posts/{instance.post.post_id}/{filename}"
-
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to=post_image_upload_path)
-
-    def __str__(self):
-        return f"Image {self.id} for Post {self.post.post_id}"
-
 
 class Hashtag(models.Model):
     id = models.AutoField(primary_key=True)  # Explicit primary key
@@ -121,7 +114,7 @@ class Followers(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.follower.user_id} following {self.following.user_id}"
+        return f"({self.follower.username}) Is following ( {self.following.username} )"
 
 def default_expiry():
     return timezone.now() + timedelta(hours=24)
