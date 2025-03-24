@@ -29,17 +29,23 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f"{self.username} "
 
-
 class Post(models.Model):
     post_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
     caption = models.CharField(max_length=100)
-    image = ArrayField(models.ImageField(upload_to="posts/%Y/%m/%d/"), size=5 ,blank=True ,null=True)
-    created_at = models.DateTimeField(auto_now_add=True , db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
-      return f"Post {self.post_id} by {self.user.user_id} - {self.caption[:20]}..."
+        return f"Post With Id '{self.post_id}'   by {self.user.username} - {self.caption[:20]}..."
 
+class PostImage(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to="posts/%Y/%m/%d/")
+
+    def __str__(self):
+        return f"Image for {self.post.user.username}'s Post ID - {self.post.post_id}"
+
+    
 class Hashtag(models.Model):
     id = models.AutoField(primary_key=True)  # Explicit primary key
     tag = models.CharField(max_length=100 , blank=False)
@@ -64,7 +70,7 @@ class Like(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.user.user_id} liked {self.content_object or 'Deleted Object'}"
+        return f"{self.user.username} liked {self.content_object or 'Deleted Object'}"
     
 class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE , related_name="user_comment")
@@ -77,10 +83,11 @@ class Comment(models.Model):
 
     def __str__(self):
         if self.parent:
-            return f"Reply to {self.parent.id} by {self.user.user_id}"
-        
-        return f"Comment by {self.user.user_id} on {self.content_object or 'Deleted Object'}: {self.commented_text[:30]}"
-
+            return f"{self.user.username} replied to {self.parent.user.username.upper()}'s comment - {self.commented_text[:10]}..."
+        elif isinstance(self.content_object, Post):
+            return f"{self.user.username} commented on {self.content_object.user.username.upper()}'s post: {self.commented_text[:30]}"
+        else:
+            return f"{self.user.username} commented on {self.content_object or 'Deleted Object'}: {self.commented_text[:30]}"
 class SavedPost(models.Model):
     post = models.ForeignKey(Post , on_delete= models.CASCADE , related_name="saved_posts") 
     user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete= models.CASCADE , related_name="saved_posts")
@@ -93,7 +100,7 @@ class SavedPost(models.Model):
 
 
     def __str__(self):
-        return f"{self.user.user_id} saved Post {self.post.post_id}"   
+        return f"{self.user.username} saved {self.post.user.username}'s Post ID - {self.post.post_id}"   
 
 class Followers(models.Model):
     follower =  models.ForeignKey(settings.AUTH_USER_MODEL , on_delete= models.CASCADE , related_name="followers")
@@ -168,7 +175,6 @@ class Notification(models.Model):
 class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_messages')
-    subject = models.CharField(max_length=299)
     content = models.TextField(blank=True,null=True)
     sent_at = models.DateTimeField(auto_now_add=True)
     read_at = models.DateTimeField(null=True, blank=True)
@@ -182,7 +188,7 @@ class Message(models.Model):
     forward_from = models.ForeignKey('self',null=True, blank=True, on_delete=models.DO_NOTHING , related_name="forwards")
     
     def __str__(self):
-        return f"Message from {self.sender.user_id} to {self.recipient.user_id}"
+        return f"Message from {self.sender.username} to {self.recipient.username}"
 
     def mark_as_read(self):
         self.is_read = True
