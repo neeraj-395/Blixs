@@ -11,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 
 class CustomUser(AbstractUser):
     user_id = models.AutoField(primary_key=True)
-    user_uid = models.CharField(max_length=50,default='null')
     email = models.EmailField(unique=True)
     bio = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -36,7 +35,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):
-        return f"Post With Id '{self.post_id}'   by {self.user.username} - {self.caption[:20]}..."
+        return f"Post With Id '{self.post_id}' by {self.user.username} - {self.caption[:20]}..."
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
