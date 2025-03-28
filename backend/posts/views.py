@@ -9,17 +9,16 @@ from rest_framework.decorators import api_view, permission_classes
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_self_posts(req):
-    user = req.user
-    post = Post.objects.filter(user=user)
+def get_posts(req):
+    post = Post.objects.all()
     serializers = PostSerializer(post, many=True)
     return Response(serializers.data)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_all_posts(req):
-    post = Post.objects.all()
+def get_user_posts(req):
+    user = req.user
+    post = Post.objects.filter(user=user)
     serializers = PostSerializer(post, many=True)
     return Response(serializers.data)
 

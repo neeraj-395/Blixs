@@ -1,22 +1,11 @@
-from rest_framework.decorators import api_view, permission_classes
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from messages.serializers import MessageSerializer
 from rest_framework.response import Response
-from api.models import *
-from django.contrib.contenttypes.models import ContentType
+from users.models import CustomUser
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
-from api.serializers import *
-from rest_framework.permissions import IsAuthenticated , AllowAny
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def authentication_chk(req):
- return Response({"authenticated":True})
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_notifications(req):
-    notifications = Notification.objects.filter(user=req.user)
-    serializer = NotificationSerializer(notifications, many=True)
-    return Response(serializer.data)
+from messages.models import Message
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

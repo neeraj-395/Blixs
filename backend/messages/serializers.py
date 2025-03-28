@@ -1,23 +1,5 @@
-from api.models import *
-from django.utils import timezone
-from django.utils.timesince import timesince
-from django.contrib.contenttypes.models import ContentType
-
-
-
-
-
-
-
-class StorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Story
-        fields = "__all__"
-
-class NotificationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Notification
-        fields = "__all__"
+from rest_framework import serializers
+from messages.models import Message
 
 class MessageSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
