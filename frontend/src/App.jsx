@@ -4,7 +4,7 @@ import Login from "./routes/Login";
 import Signup from "./routes/Signup";
 import User_page from "./routes/User-page";
 import Navbar from "./routes/Navbar";
-import Footer from "./routes/footer";
+import Footer from "./routes/Footer";
 
 const App = () => {
   return (
