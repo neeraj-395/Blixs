@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { logout_try, is_authenticated } from "../endpoints/Api";
+import { logout }  from "../services/auth";
 
 const Navbar = () => {
   const [userLogin, setUserLogin] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const result = await is_authenticated();
+      const result = false;
       setUserLogin(result);
     };
     checkAuth();
   }, []);
 
   const handleLogout = async () => {
-    const success = await logout_try();
+    const success = await logout();
     if (success) {
       alert("Logged out successfully!");
       setUserLogin(false);

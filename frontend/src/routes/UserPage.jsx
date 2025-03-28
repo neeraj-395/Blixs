@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { user } from "../endpoints/Api";
+import { user } from "../services/users";
 
 const UserPage = () => {
   const [user_Info, setUser_Info] = useState(null);
