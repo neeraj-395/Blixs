@@ -2,125 +2,18 @@ from django.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from datetime import timedelta
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
-class CustomUser(AbstractUser):
-    user_id = models.AutoField(primary_key=True)
-    email = models.EmailField(unique=True)
-    bio = models.CharField(max_length=100, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    gender = models.CharField(
-        max_length=1,
-        choices=[('M', 'Male'), ('F', 'Female'), ('P', 'Prefer not to say')],
-        default='P'
-    )
-    profile_pic = models.ImageField(upload_to="profile_pics/", null=True, blank=True)
 
-    @property
-    def id(self):
-        return self.user_id  # Ensure 'id' is mapped to 'user_id'
-        
-    def __str__(self):
-        return f"{self.username} "
-
-class Post(models.Model):
-    post_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
-    caption = models.CharField(max_length=100)
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-
-    def __str__(self):
-        return f"Post With Id '{self.post_id}' by {self.user.username} - {self.caption[:20]}..."
-
-class PostImage(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to="posts/%Y/%m/%d/")
-
-    def __str__(self):
-        return f"Image for {self.post.user.username}'s Post ID - {self.post.post_id}"
 
     
-class Hashtag(models.Model):
-    id = models.AutoField(primary_key=True)  # Explicit primary key
-    tag = models.CharField(max_length=100 , blank=False)
-    content_type = models.ForeignKey(ContentType , on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey("content_type","object_id") 
-    created_at = models.DateTimeField(auto_now_add=True , db_index=True)
-
-    def __str__(self):
-        return self.tag  
-
-class Like(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="likes")
-    content_type = models.ForeignKey(ContentType , on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type','object_id') 
-    liked_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'content_type', 'object_id'], name='unique_like_per_user_per_object')
-        ]
-
-    def __str__(self):
-        return f"{self.user.username} liked {self.content_object or 'Deleted Object'}"
-    
-class Comment(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete= models.CASCADE , related_name="user_comment")
-    content_type = models.ForeignKey(ContentType , on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type','object_id') 
-    commented_text = models.CharField(max_length=200 , blank=False )
-    created_at = models.DateTimeField(auto_now_add=True , db_index=True)
-    parent = models.ForeignKey('self' , blank=True , null=True ,on_delete=models.CASCADE , related_name="replies")
-
-    def __str__(self):
-        if self.parent:
-            return f"{self.user.username} replied to {self.parent.user.username.upper()}'s comment - {self.commented_text[:10]}..."
-        elif isinstance(self.content_object, Post):
-            return f"{self.user.username} commented on {self.content_object.user.username.upper()}'s post: {self.commented_text[:30]}"
-        else:
-            return f"{self.user.username} commented on {self.content_object or 'Deleted Object'}: {self.commented_text[:30]}"
-class SavedPost(models.Model):
-    post = models.ForeignKey(Post , on_delete= models.CASCADE , related_name="saved_posts") 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete= models.CASCADE , related_name="saved_posts")
-    created_at = models.DateTimeField(auto_now_add=True , db_index=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['post', 'user'], name='unique_saved_post_per_user')
-        ]
+  
 
 
-    def __str__(self):
-        return f"{self.user.username} saved {self.post.user.username}'s Post ID - {self.post.post_id}"   
-
-class Followers(models.Model):
-    follower =  models.ForeignKey(settings.AUTH_USER_MODEL , on_delete= models.CASCADE , related_name="followers")
-    following =  models.ForeignKey(settings.AUTH_USER_MODEL , on_delete= models.CASCADE , related_name="following")
-    followed_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['follower', 'following'], name='unique_follow')
-        ]
-
-    def clean(self):
-        if self.follower == self.following:
-            raise ValidationError("Users cannot follow themselves.")
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"({self.follower.username}) Is following ( {self.following.username} )"
 
 def default_expiry():
     return timezone.now() + timedelta(hours=24)
