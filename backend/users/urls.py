@@ -7,7 +7,7 @@ urlpatterns = [
     path('token/refresh/', CustomRefreshTokenView.as_view(), name='token_refresh'),
     path('register/', register, name='register'),
     path('logout/', logout, name='logout'),
-    path('users/', get_users, name='get-users'),
     path('user/', get_user, name='get-user'),
+    path('all/', get_users, name='get-users'),
     path('follow/<int:user_id>/', follow_user, name='follow-user')
 ]

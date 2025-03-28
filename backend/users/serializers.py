@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from users.models import CustomUser
 from users.models import Followers
+from posts.models import Post
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -38,6 +39,9 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_user_following(self,obj):
         return Followers.objects.filter(follower=obj).count()
+    
+    def get_post_num(self, obj):
+        return Post.objects.filter(user=obj).count()
     
 class FollowersSerializer(serializers.ModelSerializer):
     class Meta:
