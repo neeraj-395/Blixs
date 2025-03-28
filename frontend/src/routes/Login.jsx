@@ -16,9 +16,9 @@ const Login = () => {
     try {
       const success = await login(username, password);
       if (success){
-        alert("Login Sucess")
+        alert("Login Success!")
       }else{
-        alert("Login Failed")
+        alert("Login Failed!")
       }
       navigate("/");
     } catch (error) {

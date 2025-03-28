@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.BACKEND_URL;
+const BASE_URL = "http://127.0.0.1:8000/";
 const USER_URL = BASE_URL + 'users/user/';
 
 export const user = async () => {

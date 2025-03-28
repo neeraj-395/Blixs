@@ -34,6 +34,11 @@ def logout(req):
   
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def is_authenticated(request):
+   return Response({'success': True})
+  
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_user(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
@@ -48,7 +53,7 @@ def get_users(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def follow_user(req, user_id):
-    user_to_follow = get_object_or_404(CustomUser, id=user_id)
+    user_to_follow = get_object_or_404(CustomUser, user_id=user_id)
     if req.user == user_to_follow:
         return Response({'message': "You can't follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
     follow, created = Followers.objects.get_or_create(follower=req.user, following=user_to_follow)

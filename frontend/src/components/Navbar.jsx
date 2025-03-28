@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { logout }  from "../services/auth";
+import { is_authenticated, logout }  from "../services/auth";
 
 const Navbar = () => {
   const [userLogin, setUserLogin] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const result = false;
+      const result = await is_authenticated();
       setUserLogin(result);
+      console.log(result);
     };
     checkAuth();
   }, []);

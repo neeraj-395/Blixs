@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.BACKEND_URL;
+const BASE_URL = "http://127.0.0.1:8000/";
 const LOGIN_URL = BASE_URL + 'users/token/';
 const LOGOUT_URL = BASE_URL + 'users/logout/';
 const REGISTER_URL = BASE_URL + 'users/register/';
+const ISAUTH_URL = BASE_URL + 'users/authenticated/'
 
 export const register = async (userData) => {
     try {
@@ -40,3 +41,14 @@ export const logout = async () => {
       return false;
     }
 };
+
+export const is_authenticated = async () => {
+  try {
+    const response = await axios.get(ISAUTH_URL, 
+      {withCredentials: true}
+    );
+    return response.data.success;
+  } catch (error) {
+    return false;
+  }
+}
