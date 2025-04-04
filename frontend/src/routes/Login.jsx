@@ -1,18 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login_try } from "../endpoints/Api";
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../context/useAuth";
-
-// import {login_try} from "../endpoints/api";
+import { login } from "../services/auth";
 
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  // const { login_user } = useAuth();
-
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -20,11 +14,11 @@ const Login = () => {
       return;
     }
     try {
-      const success = await login_try(username, password);
+      const success = await login(username, password);
       if (success){
-        alert("Login Sucess")
+        alert("Login Success!")
       }else{
-        alert("Login Failed")
+        alert("Login Failed!")
       }
       navigate("/");
     } catch (error) {
