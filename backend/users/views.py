@@ -31,7 +31,27 @@ def logout(req):
     return res
   except:
     return Response({'logout_success':False})
-  
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_user(request):
+    if request.method == "DELETE":
+        user = request.user
+        user.delete()
+        return Response({"Response": "User deleted successfully"}, status=204)
+    return Response({"error": "Invalid request method/Not Logged In"}, status=400)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def edit_user(request):
+    user = request.user
+    serializer = UserRegisterSerializer(user, data=request.data , partial=True)
+    if serializer.is_valid():
+        serializer.save()  
+        return Response({"Response": "Profile Edited successfully!", 'data': serializer.data} , status=status.HTTP_200_OK,)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def is_authenticated(request):
