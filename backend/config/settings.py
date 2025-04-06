@@ -73,10 +73,11 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
+    "channels",
     "users",
     "posts",
+    "chats",
     "stories",
-    "messages",
     "notifications"
 ]
 
@@ -129,6 +130,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+CHANNEL_LAYER = {
+    "default" : {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
     }
 }
 

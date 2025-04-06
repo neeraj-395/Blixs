@@ -17,10 +17,16 @@ class CustomUser(AbstractUser):
 
     @property
     def id(self):
-        return self.user_id  # Ensure 'id' is mapped to 'user_id'
+        return self.user_id
         
     def __str__(self):
-        return f"{self.username} "
+        return f"{self.username}"
+
+class OnlineUser(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
     
 class Followers(models.Model):
     follower =  models.ForeignKey(settings.AUTH_USER_MODEL , on_delete= models.CASCADE , related_name="followers")
