@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('delete/', delete_user, name='delete_current_user'),
     path('edit/', edit_user, name='edit_current_user'),
-    path('user/', get_user, name='get_current_user'),
+    path('', get_user, name='get_current_user'),
 
     path('all/', get_users, name='g'),
     path('<int:user_id>/follow', follow_user, name='follow_user')
