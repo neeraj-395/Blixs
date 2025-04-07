@@ -74,11 +74,11 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "channels",
-    "users",
-    "posts",
-    "chats",
+    "user",
+    "post",
+    "chat",
     "stories",
-    "notifications"
+    "notification"
 ]
 
 REST_FRAMEWORK = {
@@ -143,7 +143,7 @@ CHANNEL_LAYER = {
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'user.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
