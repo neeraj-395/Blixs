@@ -1,10 +1,8 @@
 import axios from "axios";
-
-const BASE_URL = "http://127.0.0.1:8000/";
-const REFRESH_URL = BASE_URL + 'api/token/refresh/';
+import { AuthAPI } from "./routes";
 
 export const refresh_token = async () => {
-    const res = await axios.post(REFRESH_URL, {}, { withCredentials: true });
+    const res = await axios.post(AuthAPI.refresh, {}, { withCredentials: true });
     return res.data.refreshed || false;
 };
 

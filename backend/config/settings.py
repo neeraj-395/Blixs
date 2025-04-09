@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 SIMPLE_JWT = {
-    "USER_ID_FIELD": "user_id",  # Use "user_id" instead of "id"
+    "USER_ID_FIELD": "id",
 }
 
 # CORS Configuration

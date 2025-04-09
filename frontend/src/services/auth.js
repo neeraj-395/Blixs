@@ -4,7 +4,6 @@ import { AuthAPI }  from "./routes";
 export const register = async (userData) => {
     try {
       const response = await axios.post(AuthAPI.register, userData);
-      console.log("Registration Success: ", response.data);
       return response.data;
     } catch (error) {
       console.error("Registration Failed: ", error.response?.data || error.message);
@@ -30,7 +29,7 @@ export const logout = async () => {
       const response = await axios.post(AuthAPI.logout, {},
         { withCredentials: true }
       );
-      return response.data.logout_success;
+      return response.data.success;
     } catch (error) {
       console.error("Logout API error:", error);
       return false;
@@ -42,7 +41,7 @@ export const is_authenticated = async () => {
     const response = await axios.get(AuthAPI.isAuth, 
       {withCredentials: true}
     );
-    return response.data.success;
+    return response.data;
   } catch (error) {
     return false;
   }

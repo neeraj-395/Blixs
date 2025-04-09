@@ -13,7 +13,7 @@ def set_auth_cookies(response, access_token, refresh_token=None):
     cookie_settings = {
         'httponly': True,
         'secure': True,
-        'samesite': 'None',
+        'samesite': 'Lax',
         'path': '/',
     }
 

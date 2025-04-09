@@ -5,14 +5,14 @@ from user.views import *
 urlpatterns = [
     path('auth/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', CustomRefreshTokenView.as_view(), name='token_refresh'),
-    path('auth/check/', is_authenticated, name='auth_check'),
-    path('auth/register/', register, name='register'),
-    path('auth/logout/', logout, name='logout'),
+    path('auth/check/', check_authentication, name='check_authentication'),
+    path('auth/register/', register_user, name='register_user'),
+    path('auth/logout/', logout_user, name='logout_user'),
 
-    path('delete/', delete_user, name='delete_current_user'),
-    path('edit/', edit_user, name='edit_current_user'),
-    path('', get_user, name='get_current_user'),
+    path('delete/', delete_user_account, name='delete_user_account'),
+    path('edit/', update_user, name='update_user'),
+    path('', get_current_user, name='get_current_user'),
 
-    path('all/', get_users, name='g'),
-    path('<int:user_id>/follow', follow_user, name='follow_user')
+    path('all/', list_users, name='all_users'),
+    path('<int:user_id>/follow', toggle_follow_user, name='toggle_follow_user')
 ]

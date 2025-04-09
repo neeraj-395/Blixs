@@ -45,7 +45,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     # -------------------- WebSocket Handlers --------------------
 
     async def connect(self):
-        self.user_id = self.scope['url_route']['kwargs']['userId']
+        self.user_id = self.scope['url_route']['kwargs']['userid']
         self.user = await self.get_user(self.user_id)
         self.user_rooms = await self.get_user_rooms(self.user_id)
 
@@ -69,11 +69,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         action = data.get('action')
-        room_id = data.get('roomId')
+        room_id = data.get('roomid')
 
         if action == 'message':
             message = data.get('message')
-            user_id = data.get('user')
+            user_id = data.get('userid')
             chat_message = await self.save_message(message, user_id, room_id)
         elif action == 'typing':
             chat_message = data
@@ -100,7 +100,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'message': {
-                    'action': 'onlineUser',
+                    'action': 'online_user',
                     'userList': user_list
                 }
             }

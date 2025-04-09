@@ -1,68 +1,46 @@
-import { useEffect, useState } from 'react';
-import { BASE_URL, WS_URL } from '../services/routes';
+import React, { useEffect, useState } from "react";
+import ChatBody from "../components/chatbody/ChatBody";
+import Sidebar from "../components/sidebar/Sidebar";
+import { useNavigate } from "react-router-dom";
+import { get_user } from "../services/user";
 
+const Chats = (props) => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [currentChattingMember, setCurrentChattingMember] = useState({});
+  const [onlineUserList, setOnlineUserList] = useState([]);
+  const navigate = useNavigate();
 
-let socket = new WebSocket(WS_URL + 'ws/users/<userid>/chat/');
+  useEffect(() => {
+    const getUser = async () => {
+      const result = await get_user();
+      if(!result) navigate("/login");
+      setCurrentUser(result);
+    };
+    getUser();
+  }, [navigate]);
 
+  return (
+    <main className="content">
+      <div className="container-fluid p-0">
+        <div className="container-fluid">
+          <div className="row g-0">
+            <Sidebar
+              currentUser = {currentUser}
+              setCurrentChattingMember={setCurrentChattingMember}
+              onlineUserList={onlineUserList}
+              {...props}
+            />
+            <ChatBody
+              currentUser = {currentUser}
+              setOnlineUserList={setOnlineUserList}
+              currentChattingMember={currentChattingMember}
+              {...props}
+            />
+          </div>
+        </div>
+      </div>
+    </main>
+  );
+};
 
-const chatBody = ({match, currentChattingMember, setOnlineUserList})  => {
-  const chatid = match && match.params ? match.params.chatId : null;
-  const [inputMessage, setInputMessage] = useState("");
-  const [messages, setMessages] = useState({});
-  const [typing, setTyping] = useState(false);
-
-  setMessages(fetchChatMessage(match));
-
-  useEffect(()=>{
-    setMessages(fetchChatMessage(chatid));
-  }, [chatid]);
-
-  socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if(chatid === data.roomid) {
-      if(data.action === 'message') {
-        data['image'] = BASE_URL.slice(0, -1) + data.image;
-        setMessages((prevState) => {
-          let messagesState = JSON.parse(JSON.stringify(prevState));
-          messagesState.results.unshift(data);
-          return messagesState;
-        });
-        setTyping(false);
-      } else if (data.action === 'typing' && data.user !== userid) {
-        setTyping(data.typing);
-      }
-    }
-    if (data.action === 'onlineUser') {
-      setOnlineUserList(data.userList);
-    }
-  }
-
-  const messageSubmitHandler = (event) => {
-    event.preventDefault();
-    if(!inputMessage) return;
-    socket.send(JSON.stringify({
-      action: 'message',
-      message: inputMessage,
-      userid: userid,
-      roomid: chatid
-    }));
-    setInputMessage("");
-  }
-
-  const sendTypingSignal = (typing) => {
-    socket.send(
-      JSON.stringify({
-        action:'typing',
-        typing: typing,
-        userid: userid,
-        roomid: chatid
-      })
-    );
-  };
-
-  const chatMessageTypingHandler = (event) => {
-    if(event.keyCode !== 13) {
-      if(!isTypingSignalSent)
-    }
-  }
-}
+export default Chats;

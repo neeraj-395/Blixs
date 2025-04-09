@@ -8,8 +8,7 @@ const Navbar = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const result = await is_authenticated();
-      setUserLogin(result);
-      console.log(result);
+      setUserLogin(result.success);
     };
     checkAuth();
   }, []);
@@ -41,7 +40,7 @@ const Navbar = () => {
         {userLogin ? (
           <>
             <Link to="/user" className="text-white my-4 hover:text-gray-400">👤</Link>
-            <button onClick={handleLogout} className="text-white my-4 hover:text-red-400">🚪</button>
+            <Link onClick={handleLogout} className="text-white my-4 hover:text-red-400">🚪</Link>
           </>
         ) : (
           <>
@@ -58,7 +57,7 @@ const Navbar = () => {
         {userLogin ? (
           <>
             <Link to="/user-page" className="text-white hover:text-gray-400">👤</Link>
-            <button onClick={handleLogout} className="text-white hover:text-red-400">🚪</button>
+            <Link onClick={handleLogout} className="text-white hover:text-red-400">🚪</Link>
           </>
         ) : (
           <>
