@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { register } from "../services/auth";
+import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const SignUp = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirm_password: ""
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,14 +26,15 @@ const Signup = () => {
 
     const result = await register(formData);
 
-    if (result.error) {
+    if (!result) {
       alert('Registration failed!');
-      console.error(result.error)
+      console.error(result.error);
+      navigate("/signup");
     } else {
       alert('Registration successful!');
       console.log(result);
+      navigate("/login");
     }
-
   };
 
   return (
@@ -56,4 +60,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignUp;

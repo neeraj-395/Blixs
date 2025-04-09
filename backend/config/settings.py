@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 SIMPLE_JWT = {
-    "USER_ID_FIELD": "user_id",  # Use "user_id" instead of "id"
+    "USER_ID_FIELD": "id",
 }
 
 # CORS Configuration
@@ -73,16 +73,17 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt",
-    "users",
-    "posts",
+    "channels",
+    "user",
+    "post",
+    "chat",
     "stories",
-    "messages",
-    "notifications"
+    "notification"
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'users.authentication.CookiesJWTAuthentication',
+        'user.authentication.CookiesJWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -132,11 +133,17 @@ DATABASES = {
     }
 }
 
+CHANNEL_LAYER = {
+    "default" : {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'user.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
