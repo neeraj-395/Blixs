@@ -1,15 +1,11 @@
 import { useEffect, useRef } from "react";
-import { get_userid } from "../../services/user";
 import { BASE_URL, WS_URL } from "../../services/routes";
 
 
-const useChatSocket = ({ match, setMessages, setTyping, setOnlineUserList }) => {
+const useChatSocket = ({ userid, chatid, setMessages, setTyping, setOnlineUserList }) => {
     const socketRef = useRef(null);
     const typingTimerRef = useRef(null);
     const isTypingSignalSentRef = useRef(false);
-
-    const userid = async () => await get_userid();
-    const chatid = match && match.params ? match.params.chatid : null;
 
     useEffect(()=>{
         socketRef.current = new WebSocket(`${WS_URL}ws/users/${userid}/chat/`);
@@ -73,7 +69,7 @@ const useChatSocket = ({ match, setMessages, setTyping, setOnlineUserList }) => 
         }
     }
 
-    return { userid, chatid, sendMessage, handleTyping };
+    return { sendMessage, handleTyping };
 }
 
 export default useChatSocket;

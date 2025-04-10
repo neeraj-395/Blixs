@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     "user",
     "post",
     "chat",
-    "stories",
+    "storie",
     "notification"
 ]
 

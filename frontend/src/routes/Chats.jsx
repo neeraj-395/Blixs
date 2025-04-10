@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { get_user } from "../services/user";
 
 const Chats = (props) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [currentChattingMember, setCurrentChattingMember] = useState({});
+  const [currUser, setCurrUser] = useState(null);
+  const [currChattingMember, setCurrChattingMember] = useState({});
   const [onlineUserList, setOnlineUserList] = useState([]);
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const Chats = (props) => {
     const getUser = async () => {
       const result = await get_user();
       if(!result) navigate("/login");
-      setCurrentUser(result);
+      setCurrUser(result);
     };
     getUser();
   }, [navigate]);
@@ -25,15 +25,17 @@ const Chats = (props) => {
         <div className="container-fluid">
           <div className="row g-0">
             <Sidebar
-              currentUser = {currentUser}
-              setCurrentChattingMember={setCurrentChattingMember}
+              userid = {currUser?.id}
+              chatid = {match?.params?.chatid}
+              setCurrChattingMember={setCurrChattingMember}
               onlineUserList={onlineUserList}
               {...props}
             />
             <ChatBody
-              currentUser = {currentUser}
+              userid = {currUser?.id}
+              chatid = {match?.params?.chatid}
               setOnlineUserList={setOnlineUserList}
-              currentChattingMember={currentChattingMember}
+              currChattingMember={currChattingMember}
               {...props}
             />
           </div>

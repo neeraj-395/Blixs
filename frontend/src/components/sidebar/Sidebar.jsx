@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { get_chat_users } from "../../services/chat";
 import "./sidebar.css";
 
-const Sidebar = (props) => {
-  // const [chatUsers, setChatUsers] = useState([]);
-  // const [users, setUsers] = useState([]);
-  // const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
+const Sidebar = ({userid, chatid, setCurrChattingMember, onlineUserList}) => {
+  const [chatUsers, setChatUsers] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
+
+  const fetchChatUser = async () => {
+    const response = await get_chat_users(userid);
+  }
 
   return (
     <div className="w-full sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/6 border-r">

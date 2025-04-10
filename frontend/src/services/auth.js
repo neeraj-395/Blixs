@@ -1,48 +1,20 @@
 import axios from "axios";
 import { AuthAPI }  from "./routes";
+import { handle_response } from "./utils";
 
-export const register = async (userData) => {
-    try {
-      const response = await axios.post(AuthAPI.register, userData);
-      return response.data;
-    } catch (error) {
-      console.error("Registration Failed: ", error.response?.data || error.message);
-      return false;
-    }
-};
+export const register = async (userData) => 
+  handle_response(() => axios.post(AuthAPI.register, userData));
 
-export const login = async (username, password) => {
-    try {
-      const res = await axios.post(AuthAPI.login,
-        { username, password },
-        { withCredentials: true }
-      );
-      return res.data.success;
-    } catch (error) {
-      console.error("Login API error:", error);
-      return false;
-    }
-};
+export const login = async (username, password) => 
+  handle_response(() => axios.post(AuthAPI.login, 
+    { username, password }, { withCredentials: true }
+  ));
 
-export const logout = async () => {
-    try {
-      const response = await axios.post(AuthAPI.logout, {},
-        { withCredentials: true }
-      );
-      return response.data.success;
-    } catch (error) {
-      console.error("Logout API error:", error);
-      return false;
-    }
-};
+export const logout = async () => 
+  handle_response(() => axios.get(AuthAPI.logout, { withCredentials: true }));
 
-export const is_authenticated = async () => {
-  try {
-    const response = await axios.get(AuthAPI.isAuth, 
-      {withCredentials: true}
-    );
-    return response.data;
-  } catch (error) {
-    return false;
-  }
-}
+export const is_authenticated = async () => 
+  handle_response(() => axios.get(AuthAPI.check, { withCredentials: true }));
+
+export const refresh_token = async () =>
+  handle_response(() => axios.post(AuthAPI.refresh, {}, { withCredentials: true }));

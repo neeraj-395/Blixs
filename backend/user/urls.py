@@ -11,8 +11,8 @@ urlpatterns = [
 
     path('delete/', delete_user_account, name='delete_user_account'),
     path('edit/', update_user, name='update_user'),
-    path('', get_current_user, name='get_current_user'),
+    path('me/', get_current_user, name='get_current_user'),
+    path('', list_users, name='all_users'),
 
-    path('all/', list_users, name='all_users'),
-    path('<int:user_id>/follow', toggle_follow_user, name='toggle_follow_user')
+    path('<int:user_id>/follow/toggle', user_follow_toggle, name='user_follow_toggle')
 ]

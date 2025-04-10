@@ -1,16 +1,13 @@
 import axios from "axios";
 import { UserAPI } from "./routes";
-import { refresh_callback } from "./refreshtok";
+import { refresh_token } from "./auth";
+import { handle_response, handle_retry_response } from "./utils";
 
-export const get_user = async () => {
-  try {
-    const response = await axios.get(UserAPI.current, { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    return refresh_callback(
-      error,
-      axios.get(UserAPI.current, { withCredentials: true })
-    );
-  }
-};
 
+export const get_user = async () => 
+  handle_retry_response(refresh_token,
+    () => axios.get(UserAPI.user, { withCredentials: true })
+  );
+
+export const get_users = async () => 
+  handle_response(()=>axios.get(UserAPI.users, { withCredentials: true }));

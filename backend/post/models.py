@@ -4,20 +4,22 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 class Post(models.Model):
-    post_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
     caption = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
+    def id(self):
+        return self.id
+
     def __str__(self):
-        return f"Post With Id '{self.post_id}' by {self.user.username} - {self.caption[:20]}..."
+        return f"Post With Id '{self.id}' by {self.user.username} - {self.caption[:20]}..."
 
 class PostImage(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to="posts/%Y/%m/%d/")
 
     def __str__(self):
-        return f"Image for {self.post.user.username}'s Post ID - {self.post.post_id}"
+        return f"Image for {self.post.user.username}'s Post ID - {self.post.id}"
 
 
 class SavedPost(models.Model):
@@ -31,15 +33,17 @@ class SavedPost(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.user.username} saved {self.post.user.username}'s Post ID - {self.post.post_id}"
+        return f"{self.user.username} saved {self.post.user.username}'s Post ID - {self.post.id}"
 
 class Hashtag(models.Model):
-    id = models.AutoField(primary_key=True)  # Explicit primary key
     tag = models.CharField(max_length=100 , blank=False)
     content_type = models.ForeignKey(ContentType , on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey("content_type","object_id") 
     created_at = models.DateTimeField(auto_now_add=True , db_index=True)
+
+    def id(self):
+        return self.id
 
     def __str__(self):
         return self.tag  
