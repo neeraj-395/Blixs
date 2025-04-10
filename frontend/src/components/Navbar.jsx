@@ -6,16 +6,16 @@ const Navbar = () => {
   const [userLogin, setUserLogin] = useState(false);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const handleAuth = async () => {
       const result = await is_authenticated();
       setUserLogin(result.success);
     };
-    checkAuth();
+    handleAuth();
   }, []);
 
   const handleLogout = async () => {
-    const success = await logout();
-    if (success) {
+    const result = await logout();
+    if (result.success) {
       alert("Logged out successfully!");
       setUserLogin(false);
     } else {

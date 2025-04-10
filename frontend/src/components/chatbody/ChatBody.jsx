@@ -1,27 +1,21 @@
 import { useEffect, useState } from "react";
 import useChatSocket from "./useChatSocket";
-import { BASE_URL, ChatAPI } from "../../services/routes";
-import axios from "axios";
-
+import { get_chats } from "../../services/chat";
 import './chatbody.css';
 
-const ChatBody = ({match, currentUser, currentChattingMember, setOnlineUserList}) => {
+const ChatBody = ({userid, chatid, currChattingMember, setOnlineUserList}) => {
 
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState({});
   const [typing, setTyping] = useState(false);
-  const currUserId = currentUser.id;
-  const currChatId = match && match.params ? match.params.chatid : null;
 
   const {sendMessage, handleTyping} = useChatSocket({
-    currUserId, currChatId, setMessages, setTyping, setOnlineUserList
+    userid, chatid, setMessages, setTyping, setOnlineUserList
   });
 
   useEffect(() => {
     const fetchChatMessages = async () => {
-      if(!chatid) return;
-      const url = `${ChatAPI(BASE_URL).chatMsgs(currChatId)}?limit=20&offset=0`;
-      setMessages(await axios.get(url));
+      if(chatid) setMessages(await get_chats(chatid, 20, 0));
     }
     fetchChatMessages();
   }, [chatid]);
@@ -37,21 +31,21 @@ const ChatBody = ({match, currentUser, currentChattingMember, setOnlineUserList}
   const getChatMessageClassName = (userid) =>
     currUserId === userid
       ? "flex justify-end items-start space-x-2 pb-3"
-      : "flex justify-start items-start space-x-2 pb-3";  
+      : "flex justify-start items-start space-x-2 pb-3";
 
   return (
     <div className="w-full sm:w-4/5 lg:w-4/5 xl:w-5/6 px-0">
       <div className="py-2 px-4 border-b hidden lg:block">
         <div className="flex items-center py-1">
           <img
-            src={currentChattingMember?.image}
+            src={currChattingMember?.image}
             className="rounded-full mr-2"
             alt="User"
             width="40"
             height="40"
           />
           <div className="flex-grow pl-3">
-            <strong>{currentChattingMember?.name}</strong>
+            <strong>{currChattingMember?.name}</strong>
           </div>
         </div>
       </div>
@@ -77,7 +71,7 @@ const ChatBody = ({match, currentUser, currentChattingMember, setOnlineUserList}
                 <img
                   src={message.image}
                   className="rounded-full mr-2"
-                  alt={message.userName}
+                  alt={message.username}
                   width="40"
                   height="40"
                 />

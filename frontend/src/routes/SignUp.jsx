@@ -23,17 +23,14 @@ const SignUp = () => {
       alert("Passwords do not match!");
       return;
     }
-
     const result = await register(formData);
 
-    if (!result) {
-      alert('Registration failed!');
-      console.error(result.error);
-      navigate("/signup");
-    } else {
+    if (result) {
       alert('Registration successful!');
-      console.log(result);
       navigate("/login");
+    } else {
+      alert('Registration failed!');
+      location.reload();
     }
   };
 

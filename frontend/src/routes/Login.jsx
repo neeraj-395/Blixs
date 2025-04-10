@@ -13,17 +13,13 @@ const Login = () => {
       alert("Username and password cannot be empty!");
       return;
     }
-    try {
-      const success = await login(username, password);
-      if (success){
-        alert("Login Success!");
-      }else{
-        alert("Login Failed!");
-      }
+    const result = await login(username, password);
+    if (result.success) {
+      alert("User Login Successfull.");
       navigate("/");
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("An error occurred during login.");
+    }else{
+      alert("User Login Failed.");
+      location.reload();
     }
   };
 

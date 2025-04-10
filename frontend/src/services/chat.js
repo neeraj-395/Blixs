@@ -1,12 +1,13 @@
-import { BASE_URL, ChatAPI } from "./routes";
+import { ChatAPI } from "./routes";
+import { handle_response } from "./utils";
 
-export const get_chats = async (chatid) => {
-  return await axios.get(ChatAPI(BASE_URL).chatMsgs(chatid) + 'limit=20&offset=0');
-}
+export const get_chats = async (chatid, limit, offset) => 
+  handle_response(() => axios.get(
+    `${ChatAPI.chatmsg(chatid)}?limit=${limit}&offset=${offset}`
+  ));
 
-export const get_chat_users = async (userid) => {
-  return await axios.get(ChatAPI(BASE_URL).userMsgs(userid));
-}
+export const get_chat_users = async (userid) =>
+  handle_response(() => axios.get(ChatAPI.usermsg(userid)));
 
 
 

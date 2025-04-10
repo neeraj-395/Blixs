@@ -11,16 +11,16 @@ def set_auth_cookies(response, access_token, refresh_token=None):
     Helper function to set authentication cookies.
     """
     cookie_settings = {
-        'httponly': True,
-        'secure': True,
-        'samesite': 'Lax',
         'path': '/',
+        'samesite': 'None',
+        'secure': True,
+        'httponly': True,
     }
 
-    response.set_cookie(key="access_token", value=access_token, **cookie_settings)
+    response.set_cookie(key='access_token', value=access_token, **cookie_settings)
 
     if refresh_token:
-        response.set_cookie(key="refresh_token", value=refresh_token, **cookie_settings)
+        response.set_cookie(key='refresh_token', value=refresh_token, **cookie_settings)
 
     return response
 
@@ -71,7 +71,7 @@ class CustomRefreshTokenView(TokenRefreshView):
             if not new_access_token:
                 return error_response("No access token returned after refresh")
 
-            response = Response({'refreshed': True}, status=status.HTTP_200_OK)
+            response = Response({'success': True}, status=status.HTTP_200_OK)
             return set_auth_cookies(response, new_access_token)
 
         except Exception as e:

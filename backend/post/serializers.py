@@ -16,7 +16,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['post_id', 'user', 'caption', 'time_ago' , 'likes_count',
+        fields = ['id', 'user', 'caption', 'time_ago' , 'likes_count',
                   'comments_count', 'hashtags', 'images', 'image_urls' , 'comments' ]
 
     def create(self, validated_data):
@@ -38,15 +38,15 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_likes_count(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
-        return Like.objects.filter(content_type=content_type, object_id=obj.post_id).count()
+        return Like.objects.filter(content_type=content_type, object_id=obj.id).count()
 
     def get_comments_count(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
-        return Comment.objects.filter(content_type=content_type, object_id=obj.post_id).count()
+        return Comment.objects.filter(content_type=content_type, object_id=obj.id).count()
 
     def get_hashtags(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
-        return list(Hashtag.objects.filter(content_type=content_type, object_id=obj.post_id).values_list('tag', flat=True))
+        return list(Hashtag.objects.filter(content_type=content_type, object_id=obj.id).values_list('tag', flat=True))
 
     def get_time_ago(self, obj):
         time_diff = timesince(obj.created_at, timezone.now())
@@ -55,7 +55,7 @@ class PostSerializer(serializers.ModelSerializer):
     def get_comments(self, obj):
         # Get only parent comments related to the post
         content_type = ContentType.objects.get_for_model(obj)
-        parent_comments = Comment.objects.filter(content_type=content_type, object_id=obj.post_id, parent=None)
+        parent_comments = Comment.objects.filter(content_type=content_type, object_id=obj.id, parent=None)
         return CommentSerializer(parent_comments, many=True).data
 
 class SavedPostSerializer(serializers.ModelSerializer):

@@ -52,7 +52,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         for room in self.user_rooms:
             await self.channel_layer.group_add(room.roomId, self.channel_name) # type:ignore
 
-        await self.channel_layer.group_add('onlineUser', self.channel_name) # type:ignore
+        await self.channel_layer.group_add('online_user', self.channel_name) # type:ignore
 
         await self.add_online_user(self.user)
         await self.send_online_user_list()
@@ -64,7 +64,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send_online_user_list()
 
         for room in self.user_rooms:
-            await self.channel_layer.group_discard(room.roomId, self.channel_name) # type: ignore
+            await self.channel_layer.group_discard(room.roomid, self.channel_name) # type: ignore
 
     async def receive(self, text_data):
         data = json.loads(text_data)

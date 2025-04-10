@@ -30,4 +30,4 @@ class MessagesView(ListAPIView):
 	def get_queryset(self):
 		roomid = self.kwargs['roomid']
 		return ChatMessage.objects.\
-			filter(chat__roomid=roomid).order_by('-timestamp').all()
+			filter(chat__id=roomid).order_by('-timestamp').all()

@@ -1,25 +1,12 @@
 import axios from "axios";
 import { PostAPI } from "./routes";
-import { refresh_callback } from "./refreshtok";
+import { refresh_token } from "./auth"
+import { handle_response, handle_retry_response } from "./utils";
 
-export const get_posts = async () => {
-    try {
-      const response = await axios.get(PostAPI.all, { withCredentials: true });
-      return response.data;
-    } catch (error) {
-      return refresh_callback(error,
-        axios.get(PostAPI.all, { withCredentials: true })
-      );
-    }
-};
+export const get_posts = async () => 
+  handle_response(() => axios.get(PostAPI.all, { withCredentials: true }));
 
-export const get_user_posts = async () => {
-    try {
-      const response = await axios.get(PostAPI.byUser, { withCredentials: true });
-      return response.data;
-    } catch (error) {
-      return refresh_callback(error,
-        axios.get(PostAPI.byUser, { withCredentials: true })
-      );
-    }
-  };
+export const get_user_posts = async () =>
+  handle_retry_response(refresh_token,
+    () => axios.get(PostAPI.byuser, { withCredentials: true })
+  );
