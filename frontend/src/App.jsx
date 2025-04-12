@@ -27,7 +27,8 @@ const App = () => {
             </Route>
 
             <Route path="/login" element={<Login />} />
-            <Route path="/c/:chatid" element={''} />
+            <Route path="/direct/inbox" element={<Chats />} />
+            <Route path="/direct/c/:chatid" element={<Chats />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>
       </Router>

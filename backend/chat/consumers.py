@@ -13,7 +13,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_rooms(self, user_id):
-        return list(ChatRoom.objects.filter(member=user_id))
+        return list(ChatRoom.objects.filter(members=user_id))
 
     @database_sync_to_async
     def get_online_users(self):
@@ -29,7 +29,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_message(self, message, user_id, room_id):
-        user = CustomUser.objects.get(user_id=user_id)
+        user = CustomUser.objects.get(id=user_id)
         chat_room = ChatRoom.objects.get(id=room_id)
         chat_message = ChatMessage.objects.create(chat=chat_room, user=user, message=message)
         return {
@@ -50,7 +50,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user_rooms = await self.get_user_rooms(self.user_id)
 
         for room in self.user_rooms:
-            await self.channel_layer.group_add(room.roomId, self.channel_name) # type:ignore
+            await self.channel_layer.group_add(f'{room.id}', self.channel_name) # type:ignore
 
         await self.channel_layer.group_add('online_user', self.channel_name) # type:ignore
 
@@ -64,7 +64,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send_online_user_list()
 
         for room in self.user_rooms:
-            await self.channel_layer.group_discard(room.roomid, self.channel_name) # type: ignore
+            await self.channel_layer.group_discard(f'{room.id}', self.channel_name) # type: ignore
 
     async def receive(self, text_data):
         data = json.loads(text_data)

@@ -20,7 +20,7 @@ export const PostAPI = {
 };
 
 export const ChatAPI = {
-    usermsg: (userid) =>  `${BASE_URL}chats/users/${userid}/messages`,
-    chatmsg: (chatid) => `${BASE_URL}chats/${chatid}/messages`,
+    roomlist: (userid) =>  `${BASE_URL}chats/users/${userid}/messages`,
+    chatlist: (roomid) => `${BASE_URL}chats/${roomid}/messages`,
 };
   
