@@ -1,12 +1,9 @@
 from django.db import models
-from shortuuidfield import ShortUUIDField
 from user.models import CustomUser
 
 class ChatRoom(models.Model):
-	id = models.AutoField(primary_key=True)
-	type = models.CharField(max_length=10, default='DM')
-	member = models.ManyToManyField(CustomUser)
-	name = models.CharField(max_length=20, null=True, blank=True)
+	name = models.CharField(max_length=30, null=True, blank=True)
+	members = models.ManyToManyField(CustomUser)
 
 	def __str__(self):
 		return f"{self.id} -> {self.name}"

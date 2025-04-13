@@ -1,92 +1,74 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { get_chat_users } from "../../services/chat";
 import "./sidebar.css";
 
-const Sidebar = ({userid, chatid, setCurrChattingMember, onlineUserList}) => {
-  const [chatUsers, setChatUsers] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [isShowAddPeopleModal, setIsShowAddPeopleModal] = useState(false);
+const Sidebar = ({ userid, chatid, setCurrChattingMember, onlineUserList }) => {
+  const [chatList, setChatList] = useState([]);
 
-  const fetchChatUser = async () => {
-    const response = await get_chat_users(userid);
-  }
+  useEffect(() => {
+    const fetchRoomList = async () => {
+      const response = await get_chat_users(userid);
+      if (!response.success) return;
+      setChatList(getChatList(response.data));
+    }
+    fetchRoomList();
+  }, [])
+
+  useEffect(() => {
+    if (!chatList.length) return;
+  
+    const matchedUser = chatList.find(user => user.roomid == chatid);
+    const defaultUser = matchedUser || chatList[0];
+  
+    if (defaultUser) setCurrChattingMember(defaultUser);
+    
+  }, [chatList, chatid]);
+  
+
+  const getChatList = (chat_users) => {
+    return chat_users.flatMap(chat =>
+      chat.members
+        .filter(member => member.id !== userid)
+        .map(member => ({
+          ...member,
+          roomid: chat.id,
+          is_online: onlineUserList?.includes(member.id) || false,
+        }))
+    );
+  };
 
   return (
-    <div className="w-full sm:w-1/3 md:w-1/3 lg:w-1/3 xl:w-1/6 border-r">
-      <div className="hidden md:block">
-        <button
-          onClick={''}
-          className="w-full border border-yellow-500 text-yellow-500 hover:bg-yellow-100 font-medium rounded-md py-2 my-1 mt-4"
-        >
-          Add People
-        </button>
-      </div>
-
-      {/* <div className="user-list-container">
-        {getChatListWithOnlineUser()?.map((chatUser) => {
+    <div className="w-full lg:w-1/4 xl:w-1/5 border-r bg-white h-full shadow-sm">
+      <div className="user-list-container px-3 py-4">
+        {chatList.map((user) => {
           return (
             <Link
-              onClick={() => props.setCurrentChattingMember(chatUser)}
-              to={`/c/${chatUser.roomId}`}
-              className={`pl-1 py-2 px-2 rounded hover:bg-gray-100 cursor-pointer flex items-start ${getActiveChatClass(chatUser.roomId)}`}
-              key={chatUser.id}
-            >
+              onClick={() => setCurrChattingMember(user)}
+              to={`/direct/c/${user.roomid}`}
+              key={user.id}
+              className={`flex items-center px-3 py-2 rounded-lg transition hover:bg-gray-100 ${(user.roomid == chatid) ? "bg-yellow-100" : ""}`}>
               <img
-                src={chatUser.image}
-                className="rounded-full mr-2"
-                alt={chatUser.name}
+                src={user.image || `https://robohash.org/${user.id}.png`}
+                className="rounded-full mr-3"
+                alt={user.name}
                 width="40"
                 height="40"
               />
-              <div className="flex-grow ml-2">
-                <div className="font-medium">{chatUser.name}</div>
+              <div className="flex-grow">
+                <div className="font-medium">{user.name}</div>
                 <div className="text-sm text-gray-500 flex items-center gap-1">
                   <span
-                    className={`w-2 h-2 rounded-full ${chatUser.isOnline ? "bg-green-500" : "bg-gray-400"
+                    className={`w-2 h-2 rounded-full ${user.is_online ? "bg-green-500" : "bg-gray-400"
                       }`}
                   ></span>
-                  {chatUser.isOnline ? "Online" : "Offline"}
+                  {user.is_online ? "Online" : "Offline"}
                 </div>
               </div>
             </Link>
           );
         })}
-      </div> */}
-
-      <hr className="block lg:hidden mt-1 mb-0 border-t" />
-
-      {/* <Modal
-        modalCloseHandler={() => setIsShowAddPeopleModal(false)}
-        show={isShowAddPeopleModal}
-      >
-        {users.length > 0 ? (
-          users.map((user) => (
-            <div
-              key={user.id}
-              className="flex items-center py-2"
-            >
-              <img
-                src={user.image}
-                className="rounded-full mr-2"
-                alt={`${user.first_name} ${user.last_name}`}
-                width="40"
-                height="40"
-              />
-              <div className="flex-grow ml-2 mr-5">
-                {user.first_name + " " + user.last_name}
-              </div>
-              <button
-                onClick={() => addMemberClickHandler(user.id)}
-                className="bg-green-500 hover:bg-green-600 text-white text-sm px-3 py-1 rounded"
-              >
-                Add
-              </button>
-            </div>
-          ))
-        ) : (
-          <h3 className="text-lg font-semibold">No More User Found</h3>
-        )}
-      </Modal> */}
+      </div>
     </div>
   );
 }
