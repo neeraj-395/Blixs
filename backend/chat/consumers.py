@@ -37,8 +37,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'userid': user_id,
             'roomid': room_id,
             'message': message,
-            'image': user.image.url if user.image else '',
-            'username': user.username,
+            'name': f"{user.first_name} {user.last_name}".strip(),
+            'image': user.image.url if user.image else None,
             'timestamp': str(chat_message.timestamp),
         }
 
@@ -81,7 +81,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             return
 
         await self.channel_layer.group_send( # type:ignore
-            room_id,
+            f'{room_id}',
             {
                 'type': 'chat_message',
                 'message': chat_message
@@ -96,7 +96,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def send_online_user_list(self):
         user_list = await self.get_online_users()
         await self.channel_layer.group_send( # type:ignore
-            'onlineUser',
+            'online_user',
             {
                 'type': 'chat_message',
                 'message': {

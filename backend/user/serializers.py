@@ -1,6 +1,5 @@
 from rest_framework import serializers
-from user.models import CustomUser
-from user.models import Followers
+from user.models import CustomUser, Follow
 from post.models import Post
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -8,42 +7,45 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'password', 'email', 'bio', 'gender', 'image']
+        fields = ['first_name', 'last_name', 'username', 'password', 'email']
 
     def create(self, validated_data):
         user = CustomUser(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            bio=validated_data.get('bio', ''),
-            gender=validated_data.get('gender', 'O'),
-            image=validated_data.get('image', None)
+            first_name = validated_data['first_name'],
+            last_name = validated_data['last_name'],
+            username = validated_data['username'],
+            email = validated_data['email']
         )
         user.set_password(validated_data['password'])
         user.save()
         return user
 
 class UserSerializer(serializers.ModelSerializer):
-    followers = serializers.SerializerMethodField()
-    followings = serializers.SerializerMethodField()
-    post_count = serializers.SerializerMethodField()
+    name = serializers.SerializerMethodField()
+    followers_count = serializers.SerializerMethodField()
+    followings_count = serializers.SerializerMethodField()
+    posts_count = serializers.SerializerMethodField()
     class Meta:
         model = CustomUser
         fields = [
-            'id', 'username', 'email', 'bio', 
-            'gender', 'image', 'followers',
-            'followings', 'post_count'
+            'id', 'name', 'username', 'email', 'bio',
+            'gender', 'image', 'followers_count',
+            'followings_count', 'posts_count'
         ]
 
-    def get_followers(self, obj):
-        return Followers.objects.filter(following=obj).count()
+    def get_name(self, user):
+        return f"{user.first_name} {user.last_name}".strip()
 
-    def get_followings(self, obj):
-        return Followers.objects.filter(follower=obj).count()
+    def get_followers_count(self, user):
+        return Follow.objects.filter(following=user).count()
+
+    def get_followings_count(self, user):
+        return Follow.objects.filter(follower=user).count()
     
-    def get_post_count(self, obj):
-        return Post.objects.filter(user=obj).count()
+    def get_posts_count(self, user):
+        return Post.objects.filter(user=user).count()
     
-class FollowersSerializer(serializers.ModelSerializer):
+class FollowSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Followers
+        model = Follow
         fields = "__all__"

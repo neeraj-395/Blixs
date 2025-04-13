@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
-from user.models import CustomUser, Followers
+from user.models import CustomUser, Follow
 from user.serializers import UserRegisterSerializer, UserSerializer
 
 
@@ -96,7 +96,7 @@ def user_follow_toggle(request, user_id):
             status=status.HTTP_400_BAD_REQUEST
         )
 
-    follow, created = Followers.objects.get_or_create(follower=request.user, following=user_to_follow)
+    follow, created = Follow.objects.get_or_create(follower=request.user, following=user_to_follow)
     if not created:
         follow.delete()
         return Response({'success': True, 'message': 'unfollowed'}, status=status.HTTP_200_OK)

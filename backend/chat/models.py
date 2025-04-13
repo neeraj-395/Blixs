@@ -5,9 +5,6 @@ class ChatRoom(models.Model):
 	name = models.CharField(max_length=30, null=True, blank=True)
 	members = models.ManyToManyField(CustomUser)
 
-	def id(self):
-		return self.id
-
 	def __str__(self):
 		return f"{self.id} -> {self.name}"
 

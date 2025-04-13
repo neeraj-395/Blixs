@@ -41,7 +41,7 @@ const ChatBody = ({userid, chatid, currChattingMember, setOnlineUserList}) => {
             height="40"
           />
           <div className="flex-grow pl-3">
-            <strong>{currChattingMember?.username}</strong>
+            <strong>{currChattingMember?.name}</strong>
           </div>
         </div>
       </div>
@@ -63,11 +63,11 @@ const ChatBody = ({userid, chatid, currChattingMember, setOnlineUserList}) => {
           {messages?.map((message, index) => (
             <div key={index}
               className={`flex items-start space-x-2 pb-3`}
-              style={{justifyContent: userid == message.user ? 'flex-end': 'flex-start'}}
+              style={{justifyContent: userid == message.userid ? 'flex-end': 'flex-start'}}
             >
               <div>
                 <img
-                  src={`https://robohash.org/${message.user}.png`}
+                  src={`https://robohash.org/${message.userid}.png`}
                   className="rounded-full mr-2"
                   alt={message.name}
                   width="40"

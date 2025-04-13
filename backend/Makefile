@@ -19,7 +19,7 @@ venv:
 install:
 	. $(ACTIVATE) && pip install -r requirements.txt
 
-build: makemigrations migrate
+build: reinstalldjango makemigrations migrate
 
 run:
 	. $(ACTIVATE) && daphne config.asgi:application
@@ -32,6 +32,10 @@ makemigrations:
 
 createsuperuser:
 	. $(ACTIVATE) && $(PYTHON) $(MANAGE) createsuperuser
+
+reinstalldjango:
+	pip uninstall django -y
+	pip install django
 
 clean:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete

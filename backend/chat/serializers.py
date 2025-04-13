@@ -18,11 +18,12 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
 class ChatMessageSerializer(serializers.ModelSerializer):
 	name = serializers.SerializerMethodField()
-	image = serializers.ImageField(source='user.image')
+	userid = serializers.IntegerField(source='user.id', read_only=True)
+	image = serializers.ImageField(source='user.image', read_only=True)
 
 	class Meta:
 		model = ChatMessage
-		exclude = ['id', 'chat']
+		exclude = ['id', 'chat', 'user']
 
 	def get_name(self, obj):
-		return obj.user.first_name + ' ' + obj.user.last_name
+		return f"{obj.user.first_name} {obj.user.last_name}".strip()

@@ -4,19 +4,30 @@ import { get_chat_users } from "../../services/chat";
 import "./sidebar.css";
 
 const Sidebar = ({ userid, chatid, setCurrChattingMember, onlineUserList }) => {
-  const [chatUsers, setChatUsers] = useState([]);
+  const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
     const fetchRoomList = async () => {
       const response = await get_chat_users(userid);
       if (!response.success) return;
-      setChatUsers(response.data);
+      setChatList(getChatList(response.data));
     }
     fetchRoomList();
   }, [])
 
-  const getChatListWithOnlineUser = () => {
-    return chatUsers.flatMap(chat =>
+  useEffect(() => {
+    if (!chatList.length) return;
+  
+    const matchedUser = chatList.find(user => user.roomid == chatid);
+    const defaultUser = matchedUser || chatList[0];
+  
+    if (defaultUser) setCurrChattingMember(defaultUser);
+    
+  }, [chatList, chatid]);
+  
+
+  const getChatList = (chat_users) => {
+    return chat_users.flatMap(chat =>
       chat.members
         .filter(member => member.id !== userid)
         .map(member => ({
@@ -30,7 +41,7 @@ const Sidebar = ({ userid, chatid, setCurrChattingMember, onlineUserList }) => {
   return (
     <div className="w-full lg:w-1/4 xl:w-1/5 border-r bg-white h-full shadow-sm">
       <div className="user-list-container px-3 py-4">
-        {getChatListWithOnlineUser()?.map((user) => {
+        {chatList.map((user) => {
           return (
             <Link
               onClick={() => setCurrChattingMember(user)}
@@ -40,12 +51,12 @@ const Sidebar = ({ userid, chatid, setCurrChattingMember, onlineUserList }) => {
               <img
                 src={user.image || `https://robohash.org/${user.id}.png`}
                 className="rounded-full mr-3"
-                alt={user.username}
+                alt={user.name}
                 width="40"
                 height="40"
               />
               <div className="flex-grow">
-                <div className="font-medium">{user.username}</div>
+                <div className="font-medium">{user.name}</div>
                 <div className="text-sm text-gray-500 flex items-center gap-1">
                   <span
                     className={`w-2 h-2 rounded-full ${user.is_online ? "bg-green-500" : "bg-gray-400"

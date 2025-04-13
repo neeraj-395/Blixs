@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { BASE_URL, WS_URL } from "../../services/routes";
+import { WS_URL } from "../../services/routes";
 
 
 const useChatSocket = ({ userid, chatid, setMessages, setTyping, setOnlineUserList }) => {
@@ -12,7 +12,6 @@ const useChatSocket = ({ userid, chatid, setMessages, setTyping, setOnlineUserLi
 
         socketRef.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log(data);
 
             if(data.action == 'message' && data.roomid === chatid) {
                 setMessages(prev => [data, ...(prev || [])]);
