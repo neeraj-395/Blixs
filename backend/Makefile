@@ -2,44 +2,42 @@
 PYTHON=python
 MANAGE=manage.py
 VENV_DIR=.venv
-UNAME_S := $(shell uname -s)
 
-# Set ACTIVATE to absolute path
+# Detect OS-specific paths
 ifeq ($(OS),Windows_NT)
-	ACTIVATE := $(realpath $(VENV_DIR)/Scripts/activate)
+	PIP=$(VENV_DIR)/Scripts/pip
+	PY=$(VENV_DIR)/Scripts/python
 else
-	ACTIVATE := $(realpath $(VENV_DIR)/bin/activate)
+	PIP=$(VENV_DIR)/bin/pip
+	PY=$(VENV_DIR)/bin/python
 endif
 
-.PHONY: venv build run migrate makemigrations createsuperuser clean
+.PHONY: setup build run migrate makemigrations createsuperuser clean
 
 setup:
-	. $(PYTHON) -m venv $(VENV_DIR) && . $(ACTIVATE)
-	. $(ACTIVATE) && pip install -r requirements.txt
+	$(PYTHON) -m venv $(VENV_DIR)
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements.txt
 
-build:
-	makemigrations
-	migrate
+build: makemigrations migrate
 
 run:
-	. daphne config.asgi:application
+	daphne config.asgi:application
 
 migrate:
-	. $(PYTHON) $(MANAGE) migrate
+	$(PY) $(MANAGE) migrate
 
 makemigrations:
-	. $(PYTHON) $(MANAGE) makemigrations chat
-	. $(PYTHON) $(MANAGE) makemigrations notification
-	. $(PYTHON) $(MANAGE) makemigrations post
-	. $(PYTHON) $(MANAGE) makemigrations storie
-	. $(PYTHON) $(MANAGE) makemigrations user
+	$(PY) $(MANAGE) makemigrations chat
+	$(PY) $(MANAGE) makemigrations notification
+	$(PY) $(MANAGE) makemigrations post
+	$(PY) $(MANAGE) makemigrations storie
+	$(PY) $(MANAGE) makemigrations user
 
 createsuperuser:
-	. $(PYTHON) $(MANAGE) createsuperuser
+	$(PY) $(MANAGE) createsuperuser
 
 clean:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 	find . -path "*/migrations/*.pyc" -delete
 	rm -f db.sqlite3
-	@echo "Cleaned migration files"
-
