@@ -1,41 +1,41 @@
 # Variables
-PYTHON=python3
+PYTHON=python
 MANAGE=manage.py
 VENV_DIR=.venv
-ACTIVATE=$(VENV_DIR)/bin/activate
-
-# Detect OS
 UNAME_S := $(shell uname -s)
+
+# Set ACTIVATE to absolute path
 ifeq ($(OS),Windows_NT)
-	ACTIVATE=$(VENV_DIR)/Scripts/activate
+	ACTIVATE := $(realpath $(VENV_DIR)/Scripts/activate)
+else
+	ACTIVATE := $(realpath $(VENV_DIR)/bin/activate)
 endif
 
 .PHONY: venv build run migrate makemigrations createsuperuser clean
 
-venv:
-	$(PYTHON) -m venv $(VENV_DIR) && $(ACTIVATE)
-	@echo "Virtual environment created in $(VENV_DIR)"
-
-install:
+setup:
+	. $(PYTHON) -m venv $(VENV_DIR) && . $(ACTIVATE)
 	. $(ACTIVATE) && pip install -r requirements.txt
 
-build: reinstalldjango makemigrations migrate
+build:
+	makemigrations
+	migrate
 
 run:
-	. $(ACTIVATE) && daphne config.asgi:application
+	. daphne config.asgi:application
 
 migrate:
-	. $(ACTIVATE) && $(PYTHON) $(MANAGE) migrate
+	. $(PYTHON) $(MANAGE) migrate
 
 makemigrations:
-	. $(ACTIVATE) && $(PYTHON) $(MANAGE) makemigrations
+	. $(PYTHON) $(MANAGE) makemigrations chat
+	. $(PYTHON) $(MANAGE) makemigrations notification
+	. $(PYTHON) $(MANAGE) makemigrations post
+	. $(PYTHON) $(MANAGE) makemigrations storie
+	. $(PYTHON) $(MANAGE) makemigrations user
 
 createsuperuser:
-	. $(ACTIVATE) && $(PYTHON) $(MANAGE) createsuperuser
-
-reinstalldjango:
-	pip uninstall django -y
-	pip install django
+	. $(PYTHON) $(MANAGE) createsuperuser
 
 clean:
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
