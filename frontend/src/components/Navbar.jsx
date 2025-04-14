@@ -68,17 +68,34 @@ const Navbar = () => {
 
       {/* Bottom Navbar for Mobile */}
       <nav className="bg-gray-800 fixed bottom-0 w-full flex justify-around items-center py-3 md:hidden">
-        <Link to="/" className="text-white hover:text-gray-400">🏠</Link>
+        <Link to="/" className="text-white hover:text-gray-400">
+        <span>🏠</span>
+        <span>Home</span>
+        </Link>
 
         {userLogin ? (
           <>
-            <Link to="/user-page" className="text-white hover:text-gray-400">👤</Link>
-            <Link onClick={handleLogout} className="text-white hover:text-red-400">🚪</Link>
+            <Link to="/user-page" className="text-white hover:text-gray-400">
+            <span>👤</span>
+            <span>Profile</span>
+            </Link>
+
+            <Link onClick={handleLogout} className="text-white hover:text-red-400">
+            <span>🚪</span>
+            <span>Log Out</span>
+            </Link>
           </>
         ) : (
           <>
-            <Link to="/login" className="text-white hover:text-gray-400">🔑</Link>
-            <Link to="/signup" className="text-white hover:text-gray-400">✍️</Link>
+            <Link to="/login" className="text-white hover:text-gray-400">
+            <span>🔑</span>
+            <span>Login</span>
+            </Link>
+            
+            <Link to="/signup" className="text-white hover:text-gray-400">
+            <span>✍️</span>
+            <span>Sign Up</span>
+            </Link>
           </>
         )}
       </nav>
