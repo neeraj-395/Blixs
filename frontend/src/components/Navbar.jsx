@@ -17,7 +17,7 @@ const Navbar = () => {
     const result = await logout();
     if (result.success) {
       alert("Logged out successfully!");
-      setUserLogin(false);
+      navigator("/");
     } else {
       alert("Logout failed. Try again.");
     }
