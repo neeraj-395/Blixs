@@ -71,9 +71,9 @@ const Login = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center min-h-screen text-gray-900 ">
-          <div className="bg-[url('/Images/bg-img.png')] p-6 rounded-l-3xl shadow-md w-120 h-120 bg-[length:520px_650px] bg-no-repeat">
+          <div className="bg-[url('/images/bg.png')] p-6 rounded-l-3xl shadow-md w-120 h-120 bg-[length:520px_650px] bg-no-repeat">
             <div className="flex items-center">
-              <img src="/Images/ALGO_TECH.png" alt="ALGO_TECH" className="rounded-full m-5 w-20 h-20"></img>
+              <img src="/images/algotech.png" alt="ALGO_TECH" className="rounded-full m-5 w-20 h-20"></img>
               <span className="text-3xl font-bold text-white h-font">BLIXs</span>
             </div>
             <h2 className="h-font text-5xl font-semibold mt-28 text-center text-white">Welcome Page</h2>

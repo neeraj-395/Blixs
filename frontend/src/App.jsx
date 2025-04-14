@@ -4,7 +4,6 @@ import Login from "./routes/Login";
 import Signup from "./routes/SignUp";
 import UserPage from "./routes/UserPage";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import Chats from "./routes/Chats";
 
 const MainLayout = () => {
