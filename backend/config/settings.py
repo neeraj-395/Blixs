@@ -64,21 +64,22 @@ CORS_ALLOW_HEADERS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.messages',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
-    "corsheaders",
-    "rest_framework",
-    "rest_framework_simplejwt",
-    "channels",
-    "user",
-    "post",
-    "chat",
-    "storie",
-    "notification"
+    'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'channels',
+    'user',
+    'post',
+    'chat',
+    'storie',
+    'notification'
 ]
 
 REST_FRAMEWORK = {
