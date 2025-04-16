@@ -8,12 +8,12 @@ const UserPage = () => {
 
   useEffect(() => {
     const fetchContent = async () => {
-      const [user_response, post_response] = await Promise.all([
+      const [user_res, post_res] = await Promise.all([
         get_user(),
         get_user_posts(),
-      ]);
-      setCurrUser(user_response?.data);
-      setUserPosts(post_response?.data);
+      ]); 
+      if(user_res.success) setCurrUser(user_res.data);
+      if(post_res.success) setUserPosts(post_res.data);
     };
     fetchContent();
   }, []);
@@ -34,9 +34,9 @@ const UserPage = () => {
         <div>
           <h1 className="text-3xl p-3">{currUser.username}</h1>
           <div className="flex space-x-6 mt-2 p-3">
-            <span className="text-xl"><span className="font-bold text-xl">{currUser.post_count}</span> posts</span>
-            <span className="text-xl"><span className="font-bold text-xl">{currUser.followers}</span> followers</span>
-            <span className="text-xl"><span className="font-bold text-xl">{currUser.followings}</span> following</span>
+            <span className="text-xl"><span className="font-bold text-xl">{currUser.posts_count}</span> posts</span>
+            <span className="text-xl"><span className="font-bold text-xl">{currUser.followers_count}</span> followers</span>
+            <span className="text-xl"><span className="font-bold text-xl">{currUser.followings_count}</span> following</span>
           </div>
           <p className="text-s my4 p-3">{currUser.bio}</p>
         </div>
@@ -49,7 +49,7 @@ const UserPage = () => {
           {userPosts.map((post, index) => (
             <div key={index} className="bg-gray-800 rounded-lg overflow-hidden">
               <img
-                src={post.image || "https://picsum.photos/300"}
+                src={post.image || `https://picsum.photos/300?randome=${post.id}`}
                 alt={`post-${index}`}
                 className="object-cover w-full aspect-square"
               />

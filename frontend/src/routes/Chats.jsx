@@ -2,24 +2,22 @@ import React, { useEffect, useState } from "react";
 import ChatBody from "../components/chatbody/ChatBody";
 import ChatBodyEmpty from "../components/chatbody/ChatBodyEmpty";
 import Sidebar from "../components/sidebar/Sidebar";
-import { useNavigate, useParams } from "react-router-dom";
 import { get_user } from "../services/user";
+import { useParams } from "react-router-dom";
 
 const Chats = (props) => {
   const { chatid } = useParams();
   const [currUser, setCurrUser] = useState({});
   const [currChattingMember, setCurrChattingMember] = useState({});
   const [onlineUserList, setOnlineUserList] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const getUser = async () => {
       const result = await get_user();
-      if (!result.success) navigate("/login");
-      setCurrUser(result.data);
+      if(result.success) setCurrUser(result.data);
     };
     getUser();
-  }, [navigate]);
+  }, []);
 
   return (
     <main className="content h-screen">

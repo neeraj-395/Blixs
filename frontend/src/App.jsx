@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from "./routes/Home";
 import Login from "./routes/Login";
 import Signup from "./routes/SignUp";
@@ -10,7 +11,9 @@ const MainLayout = () => {
   return (
     <>
       <Navbar />
-      <Outlet />
+      <div className="ml-20 w-full">
+        <Outlet />
+      </div>
     </>
   );
 }
@@ -20,14 +23,17 @@ const App = () => {
     <>
       <Router>
           <Routes>
-            <Route element={<MainLayout />}>
+            <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
               <Route path="/" element={<Home />} />
               <Route path="/user" element={<UserPage />} />
             </Route>
 
+            <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
+              <Route path="/direct/inbox" element={<Chats />} />
+              <Route path="/direct/c/:chatid" element={<Chats />} />
+            </Route>
+
             <Route path="/login" element={<Login />} />
-            <Route path="/direct/inbox" element={<Chats />} />
-            <Route path="/direct/c/:chatid" element={<Chats />} />
             <Route path="/signup" element={<Signup />} />
           </Routes>
       </Router>

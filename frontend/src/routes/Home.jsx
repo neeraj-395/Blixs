@@ -1,43 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Post from '../components/Post';
-import { get_posts } from '../services/posting';
-import { get_user } from "../services/user";
-import { useNavigate } from "react-router-dom";
+import { get_posts } from '../services/post';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
-      const getUser = async () => {
-        const result = await get_user();
-        if (!result.success) navigate("/login");
-      };
-      getUser();
-    }, [navigate]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await get_posts();
-        console.log("Fetched Posts: ", response);
-        if (response && Array.isArray(response)) {
-          setPosts(response);
-        } else {
-          setError('Invalid data format');
-        }
-      } catch (err) {
-        setError('Error fetching posts: ' + err.message);
-      }
+    const fetchContent = async () => {
+      const post_result = await get_posts();
+      if(post_result.success) setPosts(post_result.data);
     };
-
-    fetchPosts();
+    fetchContent();
   }, []);
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <div className="bg-black p-4 flex flex-col items-center w-full md:ml-0">
