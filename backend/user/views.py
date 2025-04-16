@@ -84,7 +84,7 @@ def list_users(request):
     return Response({'success': True, 'users': serializer.data}, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_follow_toggle(request, user_id):
     """Follow or unfollow a user"""

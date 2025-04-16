@@ -37,12 +37,12 @@ def delete_post(req, post_id):
     post.delete()
     return Response({'success': True, 'message': 'Post deleted successfully.'}, status=status.HTTP_200_OK)  # use 200 instead of 204 to allow response body
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def like_post_toggle(req, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
+def like_post_toggle(req, postid):
+    _ = get_object_or_404(Post, post_id=postid)
     content_type = ContentType.objects.get_for_model(Post)
-    like, created = Like.objects.get_or_create(user=req.user, content_type=content_type, object_id=post_id)
+    like, created = Like.objects.get_or_create(user=req.user, content_type=content_type, object_id=postid)
     
     if not created:
         like.delete()

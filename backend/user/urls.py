@@ -14,5 +14,5 @@ urlpatterns = [
     path('me/', get_current_user, name='get_current_user'),
     path('', list_users, name='all_users'),
 
-    path('<int:user_id>/follow/toggle', user_follow_toggle, name='user_follow_toggle')
+    path('<int:user_id>/follow/toggle/', user_follow_toggle, name='user_follow_toggle')
 ]

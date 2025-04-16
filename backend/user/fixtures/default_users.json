@@ -1,0 +1,122 @@
+[
+{
+  "model": "user.customuser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$5cUnWBVF5SC9Dz0669A7ei$Ut47UaAVnCi+HE5826/3ZKTNS2JFzoZcOLQPaP7xsH0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "neeraj061",
+    "first_name": "Neeraj",
+    "last_name": "Singh",
+    "email": "nsinghh.04@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-16T05:46:12.858Z",
+    "bio": "",
+    "gender": "M",
+    "created_at": "2025-04-16T05:46:13.829Z",
+    "image": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.customuser",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$dPOUVePHpBPnq8gXh47DII$PU3qtTOAF7oBSW03SRPR9d/JRfROyrjW3wsQ2SjYRrM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "sudhanshu061",
+    "first_name": "Sudhanshu",
+    "last_name": "Kaul",
+    "email": "sudhanshu2007@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-16T05:47:21.333Z",
+    "bio": "",
+    "gender": "M",
+    "created_at": "2025-04-16T05:47:22.262Z",
+    "image": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.customuser",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$EZyM7PLhBRkS4jDJLNZWUe$84ennNgUDKdBFIAZO9Lo3CR9M2GZK+ojZHT2qjveiKE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "rahul061",
+    "first_name": "Rahul",
+    "last_name": "Tiwari",
+    "email": "rahul2002@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-04-16T05:48:22.614Z",
+    "bio": "",
+    "gender": "M",
+    "created_at": "2025-04-16T05:48:23.633Z",
+    "image": "",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.follow",
+  "pk": 1,
+  "fields": {
+    "follower": 3,
+    "following": 1,
+    "followed_at": "2025-04-16T05:50:28.776Z"
+  }
+},
+{
+  "model": "user.follow",
+  "pk": 2,
+  "fields": {
+    "follower": 3,
+    "following": 2,
+    "followed_at": "2025-04-16T05:50:36.324Z"
+  }
+},
+{
+  "model": "user.follow",
+  "pk": 3,
+  "fields": {
+    "follower": 1,
+    "following": 2,
+    "followed_at": "2025-04-16T05:51:25.426Z"
+  }
+},
+{
+  "model": "user.follow",
+  "pk": 4,
+  "fields": {
+    "follower": 1,
+    "following": 3,
+    "followed_at": "2025-04-16T05:51:32.554Z"
+  }
+},
+{
+  "model": "user.follow",
+  "pk": 5,
+  "fields": {
+    "follower": 2,
+    "following": 1,
+    "followed_at": "2025-04-16T05:52:40.242Z"
+  }
+},
+{
+  "model": "user.follow",
+  "pk": 6,
+  "fields": {
+    "follower": 2,
+    "following": 3,
+    "followed_at": "2025-04-16T05:52:47.518Z"
+  }
+}
+]
