@@ -75,13 +75,16 @@ class LikeSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
-    user = "None"
+    username = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     time_ago = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
-        fields = ['object_id', 'user', 'commented_text', 'time_ago', 'likes_count', 'replies']
+        fields = ['username', 'commented_text', 'time_ago', 'likes_count', 'replies', 'parent']
+
+    def get_username(self, obj):
+        return obj.user.username if obj.user else None
 
     def get_replies(self, obj):
         # Recursively fetch and serialize replies
