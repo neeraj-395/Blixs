@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Post from '../components/Post';
 import { get_posts } from '../services/posting';
+import { get_user } from "../services/user";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      const getUser = async () => {
+        const result = await get_user();
+        if (!result.success) navigate("/login");
+      };
+      getUser();
+    }, [navigate]);
 
   useEffect(() => {
     const fetchPosts = async () => {
