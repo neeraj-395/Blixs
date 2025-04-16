@@ -21,6 +21,10 @@ setup:
 
 build: makemigrations migrate
 
+loaddata:
+	$(PYTHON) manage.py loaddata user/fixtures/default_users.json
+	$(PYTHON) manage.py loaddata chat/fixtures/default_chats.json
+
 run:
 	daphne config.asgi:application
 

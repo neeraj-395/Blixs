@@ -1,0 +1,35 @@
+[
+{
+  "model": "chat.chatroom",
+  "pk": 1,
+  "fields": {
+    "name": "Dev-Talk",
+    "members": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "chat.chatroom",
+  "pk": 2,
+  "fields": {
+    "name": "Rahul-SuShu-Talk",
+    "members": [
+      2,
+      3
+    ]
+  }
+},
+{
+  "model": "chat.chatroom",
+  "pk": 3,
+  "fields": {
+    "name": "Neeraj-Rahul-Talk",
+    "members": [
+      1,
+      3
+    ]
+  }
+}
+]

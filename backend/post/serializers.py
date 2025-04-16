@@ -10,13 +10,13 @@ class PostSerializer(serializers.ModelSerializer):
     hashtags = serializers.SerializerMethodField()
     images = serializers.ListField(child=serializers.ImageField(), write_only=True, required=False)
     image_urls = serializers.SerializerMethodField(read_only=True)
-    user = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
     time_ago = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'user', 'caption', 'time_ago' , 'likes_count',
+        fields = ['id', 'username', 'caption', 'time_ago' , 'likes_count',
                   'comments_count', 'hashtags', 'images', 'image_urls' , 'comments' ]
 
     def create(self, validated_data):
@@ -30,7 +30,7 @@ class PostSerializer(serializers.ModelSerializer):
 
         return post
 
-    def get_user(self, obj):
+    def get_username(self, obj):
         return obj.user.username
 
     def get_image_urls(self, obj):
