@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { get_chat_users } from "../../services/chat";
 import "./sidebar.css";
+import {BsHouseDoor} from "react-icons/bs";
 
 const Sidebar = ({ userid, chatid, setCurrChattingMember, onlineUserList }) => {
   const [chatList, setChatList] = useState([]);
@@ -68,6 +69,13 @@ const Sidebar = ({ userid, chatid, setCurrChattingMember, onlineUserList }) => {
             </Link>
           );
         })}
+        <Link to="/" 
+                  type="button"
+                  className="flex items-center text-black hover:text-gray-800 px-6 mt-2 space-x-3 text-base gap-1 absolute bottom-4"
+                >
+                  <BsHouseDoor className="text-xl" />
+                  <span>Home</span>
+                </Link>
       </div>
     </div>
   );
