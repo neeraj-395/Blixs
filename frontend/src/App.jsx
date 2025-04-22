@@ -6,13 +6,14 @@ import Signup from "./routes/SignUp";
 import UserPage from "./routes/UserPage";
 import Navbar from "./components/Navbar";
 import Chats from "./routes/Chats";
+import PostPickPopup from "./components/PostPickPopup";
 
 const MainLayout = () => {
   return (
     <>
       <Navbar />
       <div className="ml-20 w-full">
-        <Outlet />
+      <Outlet />
       </div>
     </>
   );
@@ -26,6 +27,7 @@ const App = () => {
             <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
               <Route path="/" element={<Home />} />
               <Route path="/user" element={<UserPage />} />
+              <Route path="/PostPickPopup" element={<PostPickPopup/>} />
             </Route>
 
             <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
