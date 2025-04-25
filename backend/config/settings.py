@@ -186,3 +186,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ASGI_APPLICATION = 'backend.asgi.application'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR

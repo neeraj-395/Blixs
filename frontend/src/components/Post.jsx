@@ -1,7 +1,7 @@
 import React from 'react';
 import { BsFillHeartFill, BsFillChatFill, BsBookmarkFill, BsFillCursorFill } from 'react-icons/bs';
 
-const Post = ({id, username, likes_count, caption, time_ago}) => {
+const Post = ({id, username, likes_count, caption, time_ago, image_url}) => {
   return (
     <>
     <div className="flex flex-row">
@@ -13,7 +13,7 @@ const Post = ({id, username, likes_count, caption, time_ago}) => {
         </div>
 
         {/* Image */}
-        <img src={`https://picsum.photos/600/600?randome=${id}`} alt="Post" 
+        <img src={image_url || `https://picsum.photos/600/600?randome=${id}`} alt="Post" 
          className="w-full rounded-md mb-3 border-1 border-gray-500" />
 
         {/* Actions */}

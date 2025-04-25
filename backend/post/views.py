@@ -24,9 +24,9 @@ def get_user_posts(req):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_post(req):
-    serializer = PostSerializer(data=req.data)
+    serializer = PostSerializer(data=req.data, context={'request': req})
     if serializer.is_valid():
-        serializer.save(user=req.user)
+        post = serializer.save()
         return Response({'success': True, 'data': serializer.data}, status=status.HTTP_201_CREATED)
     return Response({'success': False, 'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 

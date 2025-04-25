@@ -8,33 +8,28 @@ class PostSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     hashtags = serializers.SerializerMethodField()
-    images = serializers.ListField(child=serializers.ImageField(), write_only=True, required=False)
-    image_urls = serializers.SerializerMethodField(read_only=True)
+    image_url = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
     time_ago = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'username', 'caption', 'time_ago' , 'likes_count',
-                  'comments_count', 'hashtags', 'images', 'image_urls' , 'comments' ]
+        fields = ['id', 'username', 'caption', 'image', 'image_url', 'time_ago',
+                  'likes_count', 'comments_count', 'hashtags', 'comments']
 
     def create(self, validated_data):
-        images_data = validated_data.pop('images', [])
-        post = Post.objects.create(**validated_data)
-
-        # Save images to PostImage model
-        PostImage.objects.bulk_create([
-            PostImage(post=post, image=image) for image in images_data
-        ])
-
-        return post
+        return Post.objects.create(user=self.context['request'].user, **validated_data)
 
     def get_username(self, obj):
         return obj.user.username
-
-    def get_image_urls(self, obj):
-        return [img.image.url for img in obj.images.all()]
+    
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.image and obj.image.url:
+            image_url = obj.image.url
+            return request.build_absolute_uri(image_url) if request else image_url
+        return None
 
     def get_likes_count(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
@@ -53,7 +48,6 @@ class PostSerializer(serializers.ModelSerializer):
         return "Just now" if time_diff == "0 minutes" else f"{time_diff} ago"
 
     def get_comments(self, obj):
-        # Get only parent comments related to the post
         content_type = ContentType.objects.get_for_model(obj)
         parent_comments = Comment.objects.filter(content_type=content_type, object_id=obj.id, parent=None)
         return CommentSerializer(parent_comments, many=True).data

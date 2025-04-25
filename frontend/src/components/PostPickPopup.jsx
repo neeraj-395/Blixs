@@ -19,13 +19,13 @@ const PostPickPopup = ({ isOpen, onClose }) => {
   };
 
   const handleShare = async () => {
-    const fileInput = document.getElementById("fileInput");
+    const fileInput = document.getElementById("image");
     const file = fileInput.files[0];
     if (!file || !caption) return; 
 
     const formData = new FormData();
     formData.append("image", file);
-    formData.append("caption", caption); 
+    formData.append("caption", caption);
 
     try {
       await create_post(formData); 
@@ -45,7 +45,7 @@ const PostPickPopup = ({ isOpen, onClose }) => {
             {!preview && (
               <div className="flex justify-center items-center flex-1 mb-4">
                 <button
-                  onClick={() => document.getElementById("fileInput").click()}
+                  onClick={() => document.getElementById("image").click()}
                   className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded"
                 >
                   Select a file
@@ -55,7 +55,8 @@ const PostPickPopup = ({ isOpen, onClose }) => {
 
             <input
               type="file"
-              id="fileInput"
+              id="image"
+              name="image"
               onChange={handleFileChange}
               className="hidden"
             />
@@ -69,6 +70,7 @@ const PostPickPopup = ({ isOpen, onClose }) => {
             {preview && (
               <input
                 id="caption"
+                name="caption"
                 placeholder="Write a caption..."
                 onChange={(e) => setCaption(e.target.value)} 
                 value={caption}
