@@ -65,8 +65,7 @@ const PostPickPopup = ({ isOpen, onClose }) => {
                 <img src={preview} alt="preview" className="rounded max-h-80" />
               </div>
             )}
-
-            {/* Caption input */}
+            
             {preview && (
               <input
                 id="caption"
@@ -77,8 +76,7 @@ const PostPickPopup = ({ isOpen, onClose }) => {
                 className="text-black border-2 border-gray-800 p-2 rounded mb-4"
               />
             )}
-
-            {/* Buttons at the bottom */}
+            
             <div className="flex justify-between mt-auto">
               <button
                 onClick={closePopup}
