@@ -12,7 +12,7 @@ else
 	PY=$(VENV_DIR)/bin/python
 endif
 
-.PHONY: setup build run migrate makemigrations createsuperuser clean cleanmigration cleanvenv
+.PHONY: setup build run migrate makemigrations createsuperuser clean cleanmigrations cleanvenv
 
 setup:
 	$(PYTHON) -m venv $(VENV_DIR)
@@ -43,9 +43,9 @@ makemigrations:
 createsuperuser:
 	$(PY) $(MANAGE) createsuperuser
 
-clean: cleanmigration cleanvenv
+clean: cleanmigrations cleanvenv
 
-cleanmigration: 
+cleanmigrations: 
 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 	find . -path "*/migrations/*.pyc" -delete
 	rm -f db.sqlite3

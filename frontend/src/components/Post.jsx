@@ -1,24 +1,17 @@
 import React, { useState } from 'react';
 import { BsFillHeartFill, BsFillChatFill, BsBookmarkFill, BsFillCursorFill } from 'react-icons/bs';
-import axios from 'axios';
+import { like_post } from '../services/post';
 
 const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesCount, setLikesCount] = useState(likes_count);
 
   const handleLike = async (postId) => {
-    try {
-      const response = await axios.get(`/api/posts/${postId}/like`, { withCredentials: true });
-      if (response.status === 200) {
-        console.log('Post liked successfully!');
-        setLikedByUser(true);
-        setLikesCount(prev => prev + 1);
-      } else {
-        console.error('Failed to like post:', response.status);
-      }
-    } catch (error) {
-      console.error('Error liking post:', error);
-    }
+    const res = await like_post(postId);
+    if (!res.success) return;
+  
+    setLikedByUser(res.isliked);
+    setLikesCount(prev => prev + (res.isliked ? 1 : -1));
   };
 
   return (

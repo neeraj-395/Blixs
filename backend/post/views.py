@@ -46,9 +46,9 @@ def like_post_toggle(req, post_id):
     
     if not created:
         like.delete()
-        return Response({'success': True, 'message': 'Post unliked.'}, status=status.HTTP_200_OK)
+        return Response({'success': True, 'isliked': False}, status=status.HTTP_200_OK)
     
-    return Response({'success': True, 'message': 'Post liked.'}, status=status.HTTP_201_CREATED)
+    return Response({'success': True, 'isliked': True}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 def get_post_comments(request, post_id):
