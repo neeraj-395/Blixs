@@ -7,10 +7,6 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
   const [likesCount, setLikesCount] = useState(likes_count);
 
   const handleLike = async (postId) => {
-    if (likedByUser) {
-      console.log("You've already liked this post.");
-      return;
-    }
     try {
       const response = await axios.get(`/api/posts/${postId}/like`, { withCredentials: true });
       if (response.status === 200) {
