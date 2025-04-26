@@ -3,26 +3,26 @@ import { BsFillHeartFill, BsFillChatFill, BsBookmarkFill, BsFillCursorFill } fro
 import axios from 'axios';
 
 const Post = ({ id, username, likes_count, caption, time_ago, image_url, userId }) => {
-  // State to track likes count and whether the current user has liked the post
+ 
   const [likes, setLikes] = useState(likes_count);
-  const [likedByUser, setLikedByUser] = useState(false); // New state to track if the current user has liked the post
+  const [likedByUser, setLikedByUser] = useState(false); 
 
   const handleLike = async (postId) => {
     if (likedByUser) {
       console.log("You've already liked this post.");
-      return; // Prevent multiple likes by the same user
+      return; 
     }
 
     try {
-      // Send the like request to the backend
+      
       const response = await axios.get(`/api/posts/${postId}/like`, {
-        withCredentials: true, // Include credentials (cookies, auth tokens, etc.)
+        withCredentials: true,
       });
 
       if (response.status === 200) {
         console.log('Post liked successfully!');
-        setLikes((prevLikes) => prevLikes + 1); // Increment the like count
-        setLikedByUser(true); // Set the likedByUser state to true
+        setLikes((prevLikes) => prevLikes + 1); 
+        setLikedByUser(true); 
       } else {
         console.error('Failed to like post:', response.status);
       }
@@ -48,8 +48,8 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url, userId 
         <div className="flex space-x-4 text-2xl mb-2 text-white">
           <button
             className="text-white my-4 hover:text-red-800"
-            onClick={() => handleLike(id)} // Only call if not already liked
-            disabled={likedByUser} // Disable the like button if user has already liked
+            onClick={() => handleLike(id)} 
+            disabled={likedByUser}
           >
             <BsFillHeartFill />
           </button>
