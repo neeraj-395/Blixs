@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { get_user } from "../services/user";
 import { get_user_posts } from "../services/post";
+import { useNavigate } from "react-router-dom";
+
 
 const UserPage = () => {
+
+  const navigate = useNavigate();
+
   const [currUser, setCurrUser] = useState(null);
   const [userPosts, setUserPosts] = useState(null);
 
@@ -32,7 +37,10 @@ const UserPage = () => {
           className="w-50 h-50 rounded-full mr-50 border-2 border-white/30 bg-center"
         />
         <div>
-          <h1 className="text-3xl p-3">{currUser.username}</h1>
+          <div className="flex space-x-4">
+            <h1 className="text-3xl">{currUser.username}</h1>
+            <button type="button"  onClick={() => navigate("/EditProfile")} className="px-2 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-2xl">Edit profile</button>
+          </div>
           <div className="flex space-x-6 mt-2 p-3">
             <span className="text-xl"><span className="font-bold text-xl">{currUser.posts_count}</span> posts</span>
             <span className="text-xl"><span className="font-bold text-xl">{currUser.followers_count}</span> followers</span>
