@@ -15,6 +15,7 @@ const EditProfile = () => {
   };
 
   //const handleSubmit = async (e) => {
+
     
 
   return (
@@ -49,7 +50,7 @@ const EditProfile = () => {
           </select>
         </div>
 
-       <button type="submit" className=" w-full bg-blue-500 text-white fw-bold py-2 rounded hover:bg-blue-600 mb-3 h-font">Submit</button>
+       <button type="submit" /*onClick={handleSubmit}*/ className=" w-full bg-blue-500 text-white fw-bold py-2 rounded hover:bg-blue-600 mb-3 h-font">Submit</button>
       </form>
     </div>
     </div>
