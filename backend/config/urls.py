@@ -13,4 +13,4 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static('/media/', document_root=settings.BASE_DIR)
+    urlpatterns += static('/media/', document_root=(settings.BASE_DIR / 'media'))
