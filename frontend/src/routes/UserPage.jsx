@@ -19,6 +19,7 @@ const UserPage = () => {
       ]); 
       if(user_res.success) setCurrUser(user_res.data);
       if(post_res.success) setUserPosts(post_res.data);
+      console.log(user_res.data);
     };
     fetchContent();
   }, []);
@@ -32,7 +33,7 @@ const UserPage = () => {
       {/* Profile Section */}
       <div className="flex items-center mx-25 p-10 ">
         <img
-          src={currUser.image || `https://robohash.org/${currUser.id}.png`}
+          src={currUser.image_url || `https://robohash.org/${currUser.id}.png`}
           alt="Profile"
           className="w-50 h-50 rounded-full mr-50 border-2 border-white/30 bg-center"
         />

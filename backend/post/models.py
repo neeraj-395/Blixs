@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 class Post(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="posts")
     caption = models.CharField(max_length=100)
-    image = models.ImageField(upload_to="media/%Y/%m/%d/", blank=False)
+    image = models.ImageField(upload_to="media/posts/%Y/%m/%d/", blank=False)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __str__(self):

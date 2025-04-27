@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 from user.models import CustomUser, Follow
-from user.serializers import UserRegisterSerializer, UserSerializer
+from user.serializers import *
 
 
 @api_view(['POST'])
@@ -56,7 +56,7 @@ def delete_user_account(request):
 def update_user(request):
     """Update the user's profile partially"""
     user = request.user
-    serializer = UserRegisterSerializer(user, data=request.data, partial=True)
+    serializer = UserUpdateSerializer(user, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response({

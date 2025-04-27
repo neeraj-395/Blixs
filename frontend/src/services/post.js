@@ -10,10 +10,9 @@ export const get_user_posts = async () =>
 
 export const create_post = async (data) =>
   handle_response(() => axios.post(PostAPI.create, data, {
-      headers: { "Content-Type": "multipart/form-data" },
-      withCredentials: true 
-    })
-  );
+    headers: { "Content-Type": "multipart/form-data" },
+    withCredentials: true 
+  }));
 
 export const delete_post = async (postid) =>
   handle_response(() => axios.delete(PostAPI.delete(postid), { withCredentials: true }))

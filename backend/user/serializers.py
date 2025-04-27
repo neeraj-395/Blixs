@@ -25,16 +25,25 @@ class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     followings_count = serializers.SerializerMethodField()
     posts_count = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
+
     class Meta:
         model = CustomUser
         fields = [
             'id', 'name', 'username', 'email', 'bio',
-            'gender', 'image', 'followers_count',
+            'gender', 'image_url', 'followers_count',
             'followings_count', 'posts_count'
         ]
 
     def get_name(self, user):
         return f"{user.first_name} {user.last_name}".strip()
+    
+    def get_image_url(self, user):
+        request = self.context.get('request')
+        if user.image and user.image.url:
+            image_url = user.image.url
+            return request.build_absolute_uri(image_url) if request else image_url
+        return None
 
     def get_followers_count(self, user):
         return Follow.objects.filter(following=user).count()
@@ -44,6 +53,12 @@ class UserSerializer(serializers.ModelSerializer):
     
     def get_posts_count(self, user):
         return Post.objects.filter(user=user).count()
+    
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'bio', 'gender', 'image']
+
     
 class FollowSerializer(serializers.ModelSerializer):
     class Meta:

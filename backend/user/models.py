@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 
+def profiles_directory(instance, filename):
+    return f'media/profiles/{instance.id}/{filename}'
+
 class CustomUser(AbstractUser):
     bio = models.CharField(max_length=150, blank=True, default='')
     gender = models.CharField(
@@ -10,13 +13,15 @@ class CustomUser(AbstractUser):
         default='O'
     )
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    image = models.ImageField(null=True, blank=True, default=None)
+    image = models.ImageField(upload_to=profiles_directory, blank=True, null=True)
         
     def __str__(self):
         return f"userid: {self.id}, username: {self.username}" #type: ignore
 
 class OnlineUser(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,
+    user = models.OneToOneField(
+        CustomUser, 
+        on_delete=models.CASCADE,
         related_name="online_user"
     )
 
