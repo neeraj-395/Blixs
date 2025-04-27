@@ -6,8 +6,8 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesCount, setLikesCount] = useState(likes_count);
   const [showComments, setShowComments] = useState(false);
-  const [comments, setComments] = useState([]); // Store comments here
-  const [newComment, setNewComment] = useState(''); // Store new comment text
+  const [comments, setComments] = useState([]); 
+  const [newComment, setNewComment] = useState('');
 
   const handleLike = async (postId) => {
     const res = await like_post(postId);
@@ -24,7 +24,7 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
   const handleAddComment = () => {
     if (newComment.trim() !== '') {
       setComments(prevComments => [...prevComments, { username, text: newComment }]);
-      setNewComment(''); // Clear the input field
+      setNewComment('');
     }
   };
 
