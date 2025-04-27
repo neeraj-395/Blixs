@@ -5,6 +5,9 @@ import { like_post } from '../services/post';
 const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
   const [likedByUser, setLikedByUser] = useState(false);
   const [likesCount, setLikesCount] = useState(likes_count);
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState([]); // Store comments here
+  const [newComment, setNewComment] = useState(''); // Store new comment text
 
   const handleLike = async (postId) => {
     const res = await like_post(postId);
@@ -12,6 +15,22 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
   
     setLikedByUser(res.isliked);
     setLikesCount(prev => prev + (res.isliked ? 1 : -1));
+  };
+
+  const handleCommentToggle = () => {
+    setShowComments(prev => !prev);
+  };
+
+  const handleAddComment = () => {
+    if (newComment.trim() !== '') {
+      setComments(prevComments => [...prevComments, { username, text: newComment }]);
+      setNewComment(''); // Clear the input field
+    }
+  };
+
+  const handleDeleteComment = (index) => {
+    const updatedComments = comments.filter((_, i) => i !== index);
+    setComments(updatedComments);
   };
 
   return (
@@ -26,7 +45,7 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
 
         {/* Image */}
         <img src={image_url || `https://picsum.photos/600/600?random=${id}`} alt="Post" 
-         className="w-full rounded-md mb-3 border-1 border-gray-500" />
+          className="w-full rounded-md mb-3 border-1 border-gray-500" />
 
         {/* Actions */}
         <div className="flex space-x-4 text-2xl mb-2 text-white">
@@ -36,7 +55,9 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
           >
             <BsFillHeartFill />
           </button>
-          <button className="text-white my-4 hover:text-gray-400"><BsFillChatFill /></button>
+          <button className="text-white my-4 hover:text-gray-400" onClick={handleCommentToggle}>
+            <BsFillChatFill />
+          </button>
           <button className="text-white my-4 hover:text-gray-400"><BsFillCursorFill /></button>
           <button className="text-white my-4 hover:text-gray-400 ml-auto"><BsBookmarkFill /></button>
         </div>
@@ -52,6 +73,46 @@ const Post = ({ id, username, likes_count, caption, time_ago, image_url }) => {
         {/* Time */}
         <div className="text-xs text-white mt-1">{time_ago}</div>
 
+        {/* Comments Section */}
+        {showComments && (
+          <div className="mt-4">
+            <div className="flex flex-col space-y-2">
+              {/* Display Existing Comments */}
+              {comments.length === 0 ? (
+                <p className="text-white">No comments yet</p>
+              ) : (
+                comments.map((comment, index) => (
+                  <div key={index} className="flex justify-between items-center bg-gray-800 p-2 rounded-md">
+                    <span className="text-white">{comment.username}: {comment.text}</span>
+                    <button
+                      className="text-red-600 hover:text-red-800"
+                      onClick={() => handleDeleteComment(index)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))
+              )}
+
+              {/* Add New Comment */}
+              <div className="flex mt-2">
+                <input 
+                  type="text" 
+                  value={newComment} 
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="w-full p-2 bg-gray-700 text-white rounded-md"
+                  placeholder="Add a comment..."
+                />
+                <button 
+                  className="ml-2 bg-blue-600 text-white p-2 rounded-md"
+                  onClick={handleAddComment}
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
