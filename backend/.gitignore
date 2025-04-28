@@ -3,6 +3,7 @@
 !*/migrations/__init__.py
 
 db.sqlite3
+media/
 
 
 # Byte-compiled / optimized / DLL files

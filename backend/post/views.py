@@ -24,36 +24,52 @@ def get_user_posts(req):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_post(req):
-    serializer = PostSerializer(data=req.data)
+    serializer = PostSerializer(data=req.data, context={'request': req})
     if serializer.is_valid():
-        serializer.save(user=req.user)
+        post = serializer.save()
         return Response({'success': True, 'data': serializer.data}, status=status.HTTP_201_CREATED)
     return Response({'success': False, 'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def delete_post(req, post_id):
-    post = get_object_or_404(Post, post_id=post_id, user=req.user)
+    post = get_object_or_404(Post, id=post_id, user=req.user)
     post.delete()
     return Response({'success': True, 'message': 'Post deleted successfully.'}, status=status.HTTP_200_OK)  # use 200 instead of 204 to allow response body
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def like_post_toggle(req, postid):
-    _ = get_object_or_404(Post, post_id=postid)
+def like_post_toggle(req, post_id):
+    _ = get_object_or_404(Post, id=post_id)
     content_type = ContentType.objects.get_for_model(Post)
-    like, created = Like.objects.get_or_create(user=req.user, content_type=content_type, object_id=postid)
+    like, created = Like.objects.get_or_create(user=req.user, content_type=content_type, object_id=post_id)
     
     if not created:
         like.delete()
-        return Response({'success': True, 'message': 'Post unliked.'}, status=status.HTTP_200_OK)
+        return Response({'success': True, 'isliked': False}, status=status.HTTP_200_OK)
     
-    return Response({'success': True, 'message': 'Post liked.'}, status=status.HTTP_201_CREATED)
+    return Response({'success': True, 'isliked': True}, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def get_post_comments(request, post_id):
+    _ = get_object_or_404(Post, id=post_id)
+
+    content_type = ContentType.objects.get_for_model(Post)
+
+    # Get only top-level comments (no parent)
+    comments = Comment.objects.filter(
+        content_type=content_type,
+        object_id=post_id,
+        parent__isnull=True
+    ).order_by('-created_at')
+
+    serializer = CommentSerializer(comments, many=True)
+    return Response({'success': True, 'comments': serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_comment(req, post_id):
-    post = get_object_or_404(Post, post_id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     serializer = CommentSerializer(data=req.data)
     
     if serializer.is_valid():

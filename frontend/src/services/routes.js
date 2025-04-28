@@ -3,7 +3,7 @@ export const WS_URL = 'ws://127.0.0.1:8000/';
 
 export const AuthAPI = {
   login: `${BASE_URL}users/auth/token/`,
-  refresh: `${BASE_URL}users/auth/token/refersh/`,
+  refresh: `${BASE_URL}users/auth/token/refresh/`,
   logout: `${BASE_URL}users/auth/logout/`,
   register: `${BASE_URL}users/auth/register/`,
   check: `${BASE_URL}users/auth/check/`,
