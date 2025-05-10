@@ -12,11 +12,12 @@ class PostSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     time_ago = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
+    user_liked = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = ['id', 'username', 'caption', 'image', 'image_url', 'time_ago',
-                  'likes_count', 'comments_count', 'hashtags', 'comments']
+                  'likes_count', 'comments_count', 'hashtags', 'comments', 'user_liked']
 
     def create(self, validated_data):
         return Post.objects.create(user=self.context['request'].user, **validated_data)
@@ -51,6 +52,13 @@ class PostSerializer(serializers.ModelSerializer):
         content_type = ContentType.objects.get_for_model(obj)
         parent_comments = Comment.objects.filter(content_type=content_type, object_id=obj.id, parent=None)
         return CommentSerializer(parent_comments, many=True).data
+    
+    def get_user_liked(self, obj):
+        return Like.objects.filter(
+            content_type=ContentType.objects.get_for_model(obj),
+            object_id=obj.id,
+            user=self.context['request'].user
+        ).exists()
 
 class SavedPostSerializer(serializers.ModelSerializer):
     class Meta:

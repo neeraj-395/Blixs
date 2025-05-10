@@ -6,8 +6,6 @@ import Signup from "./routes/SignUp";
 import UserPage from "./routes/UserPage";
 import Navbar from "./components/Navbar";
 import Chats from "./routes/Chats";
-import PostPickPopup from "./components/PostPickPopup";
-import EditProfile from "./components/EditProfile"
 
 const MainLayout = () => {
   return (
@@ -28,8 +26,6 @@ const App = () => {
             <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
               <Route path="/" element={<Home />} />
               <Route path="/user" element={<UserPage />} />
-              <Route path="/PostPickPopup" element={<PostPickPopup/>} />
-              <Route path="/EditProfile" element={<EditProfile/>}/>
             </Route>
 
             <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>

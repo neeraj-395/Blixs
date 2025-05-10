@@ -50,7 +50,7 @@ const Sidebar = ({ userid, chatid, setCurrChattingMember, onlineUserList }) => {
               key={user.id}
               className={`flex items-center px-3 py-2 rounded-lg transition hover:bg-gray-100 ${(user.roomid == chatid) ? "bg-yellow-100" : ""}`}>
               <img
-                src={user.image || `https://robohash.org/${user.id}.png`}
+                src={user.image || `https://robohash.org/${user.username}.png`}
                 className="rounded-full mr-3"
                 alt={user.name}
                 width="40"
