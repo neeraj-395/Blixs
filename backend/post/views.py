@@ -59,18 +59,17 @@ def get_post_comments(request, post_id):
     # Get only top-level comments (no parent)
     comments = Comment.objects.filter(
         content_type=content_type,
-        object_id=post_id,
-        parent__isnull=True
+        object_id=post_id
     ).order_by('-created_at')
 
-    serializer = CommentSerializer(comments, many=True)
+    serializer = CommentSerializer(comments, many=True, context={'request': request})
     return Response({'success': True, 'comments': serializer.data}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def add_comment(req, post_id):
     post = get_object_or_404(Post, id=post_id)
-    serializer = CommentSerializer(data=req.data)
+    serializer = CommentSerializer(data=req.data, context={'request': req})
     
     if serializer.is_valid():
         serializer.save(user=req.user, content_type=ContentType.objects.get_for_model(Post), object_id=post_id)

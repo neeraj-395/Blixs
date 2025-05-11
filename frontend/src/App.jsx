@@ -6,6 +6,7 @@ import Signup from "./routes/SignUp";
 import UserPage from "./routes/UserPage";
 import Navbar from "./components/Navbar";
 import Chats from "./routes/Chats";
+import { UserProvider } from "./contexts/UserContext";
 
 const MainLayout = () => {
   return (
@@ -21,22 +22,24 @@ const MainLayout = () => {
 const App = () => {
   return (
     <>
-      <Router>
-          <Routes>
-            <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
-              <Route path="/" element={<Home />} />
-              <Route path="/user" element={<UserPage />} />
-            </Route>
+      <UserProvider>
+        <Router>
+            <Routes>
+              <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+                <Route path="/" element={<Home />} />
+                <Route path="/user" element={<UserPage />} />
+              </Route>
 
-            <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
-              <Route path="/direct/inbox" element={<Chats />} />
-              <Route path="/direct/c/:chatid" element={<Chats />} />
-            </Route>
+              <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
+                <Route path="/direct/inbox" element={<Chats />} />
+                <Route path="/direct/c/:chatid" element={<Chats />} />
+              </Route>
 
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Routes>
-      </Router>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Routes>
+        </Router>
+      </UserProvider>
     </>
   );
 };

@@ -9,14 +9,17 @@ import {
   BsFilePlus
 } from "react-icons/bs";
 import { logout } from "../services/auth";
+import { useUser } from "../contexts/UserContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { setUser } = useUser();
   const [showCreatePost, setShowCreatePost] = useState(false);
 
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
+      setUser(null);
       alert("Logged out successfully!");
       navigate("/login");
     } else {

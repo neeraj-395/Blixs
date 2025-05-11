@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
+import { create_comment, delete_comment } from '../../services/post';
 
-const Comments = ({ username }) => {
-  const [comments, setComments] = useState([]);
+const Comments = ({ postid, comment_list}) => {
+  const [comments, setComments] = useState(comment_list);
   const [newComment, setNewComment] = useState('');
 
-  const handleAddComment = () => {
-    if (newComment.trim() !== '') {
-      setComments(prev => [...prev, { username, text: newComment }]);
-      setNewComment('');
-    }
+  const handleAddComment = async () => {
+    if (newComment.trim() === '') return;
+    const result = await create_comment(postid, {commented_text: newComment});
+    if (!result.success) { alert('Failed to add new comment!'); return; }
+    setComments(prev => [...prev, result.data]);
+    setNewComment('');
   };
 
-  const handleDeleteComment = (index) => {
-    setComments(prev => prev.filter((_, i) => i !== index));
+  const handleDeleteComment = async (comment_id) => {
+    const result = await delete_comment(comment_id);
+    if (!result.success) { alert('Unable to delete comment!'); return; }
+    setComments(prev => prev.filter(comment => comment.id !== comment_id));
   };
 
   return (
@@ -23,10 +27,11 @@ const Comments = ({ username }) => {
         ) : (
           comments.map((comment, index) => (
             <div key={index} className="flex justify-between items-center bg-gray-800 p-2 rounded-md">
-              <span className="text-white">{comment.username}: {comment.text}</span>
-              <button className="text-red-600 hover:text-red-800" onClick={() => handleDeleteComment(index)}>
+              <span className="text-white">{comment.username}: {comment.commented_text}</span>
+              {comment.is_owner && <button className="text-red-600 hover:text-red-800" 
+                onClick={() => handleDeleteComment(comment.id)}>
                 Delete
-              </button>
+              </button>}
             </div>
           ))
         )}

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { get_user } from "../services/user";
+import { useUser } from "../contexts/UserContext";
 import { get_user_posts } from "../services/post";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import EditProfileModal from '../modals/EditProfileModal';
 import DeletePostModal from "../modals/DeletePostModal";
 
 const UserPage = () => {
-  const [currUser, setCurrUser] = useState(null);
+  const { user } = useUser();
   const [userPosts, setUserPosts] = useState([]);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
@@ -14,14 +14,13 @@ const UserPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const [userRes, postsRes] = await Promise.all([get_user(), get_user_posts()]);
-      if (userRes.success) setCurrUser(userRes.data);
-      if (postsRes.success) setUserPosts(postsRes.data);
+      const result = await get_user_posts();
+      if (result.success) setUserPosts(result.data);
     }
     fetchData();
   }, []);
 
-  if (!currUser) {
+  if (!user) {
     return <div>Loading...</div>;
   }
 
@@ -30,13 +29,13 @@ const UserPage = () => {
       {/* Profile Section */}
       <div className="flex items-center mx-25 p-10">
         <img
-          src={currUser.image_url || `https://robohash.org/${currUser.username}.png`}
+          src={user.image_url || `https://robohash.org/${user.username}.png`}
           alt="Profile"
           className="w-50 h-50 rounded-full mr-50 border-2 border-white/30 bg-center"
         />
         <div>
           <div className="flex space-x-4">
-            <h1 className="text-3xl">{currUser.username}</h1>
+            <h1 className="text-3xl">{user.username}</h1>
             <button
               className="bg-blue-600 text-white px-4 py-2 rounded-3xl"
               onClick={() => setShowEditProfileModal(true)}
@@ -52,16 +51,16 @@ const UserPage = () => {
 
           <div className="flex space-x-6 mt-2">
             <span className="text-xl">
-              <span className="font-bold text-xl">{currUser.posts_count}</span> posts
+              <span className="font-bold text-xl">{user.posts_count}</span> posts
             </span>
             <span>
-              <span className="font-bold text-xl">{currUser.followers_count}</span> followers
+              <span className="font-bold text-xl">{user.followers_count}</span> followers
             </span>
             <span>
-              <span className="font-bold text-xl">{currUser.followings_count}</span> following
+              <span className="font-bold text-xl">{user.followings_count}</span> following
             </span>
           </div>
-          <p className="text-s my4 p-3">{currUser.bio}</p>
+          <p className="text-s my4 p-3">{user.bio}</p>
         </div>
       </div>
 

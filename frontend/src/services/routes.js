@@ -14,7 +14,7 @@ export const UserAPI = {
   user: `${BASE_URL}users/me/`,
   delete: `${BASE_URL}users/delete/`,
   edit: `${BASE_URL}users/edit/`,
-  follow: (userid) => `${BASE_URL}users/${userid}/follow/toggle`
+  follow: (userid) => `${BASE_URL}users/${userid}/follow/toggle/`
 };
 
 export const PostAPI = {
@@ -26,8 +26,8 @@ export const PostAPI = {
 };
 
 export const CommentAPI = {
-  create: (postid) => `${BASE_URL}posts/${postid}/comment/`,
-  delete: (cmntid) => `${BASE_URL}comments/${cmntid}/delete/`
+  create: (postid) => `${BASE_URL}posts/${postid}/comments/add/`,
+  delete: (cmntid) => `${BASE_URL}posts/comments/${cmntid}/delete/`
 }
 
 export const ChatAPI = {

@@ -7,9 +7,9 @@ const Home = () => {
 
   useEffect(() => {
     const fetchContent = async () => {
-      const post_result = await get_posts();
-      if(post_result.success) setPosts(post_result.data);
-      console.log(post_result.data);
+      const result = await get_posts();
+      if (result.success) setPosts(result.data);
+      console.log(result.data);
     };
     fetchContent();
   }, []);

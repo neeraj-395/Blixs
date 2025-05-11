@@ -50,8 +50,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_comments(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
-        parent_comments = Comment.objects.filter(content_type=content_type, object_id=obj.id, parent=None)
-        return CommentSerializer(parent_comments, many=True).data
+        comments = Comment.objects.filter(content_type=content_type, object_id=obj.id)
+        return CommentSerializer(comments, many=True, context=self.context).data
     
     def get_user_liked(self, obj):
         return Like.objects.filter(
@@ -76,22 +76,21 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class CommentSerializer(serializers.ModelSerializer):
-    replies = serializers.SerializerMethodField()
     username = serializers.SerializerMethodField()
     likes_count = serializers.SerializerMethodField()
     time_ago = serializers.SerializerMethodField()
+    is_owner = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
-        fields = ['username', 'commented_text', 'time_ago', 'likes_count', 'replies', 'parent']
+        fields = ['id', 'username', 'commented_text', 'time_ago', 'likes_count', 'is_owner']
 
     def get_username(self, obj):
         return obj.user.username if obj.user else None
-
-    def get_replies(self, obj):
-        # Recursively fetch and serialize replies
-        replies = obj.replies.all()
-        return CommentSerializer(replies, many=True).data
+    
+    def get_is_owner(self, obj):
+        request = self.context.get('request')
+        return bool(request and request.user == obj.user)
 
     def get_likes_count(self, obj):
         content_type = ContentType.objects.get_for_model(obj)
