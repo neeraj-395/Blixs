@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Post from '../components/Post';
+import Post from '../components/post/Post';
 import { get_posts } from '../services/post';
 
 const Home = () => {
@@ -7,8 +7,9 @@ const Home = () => {
 
   useEffect(() => {
     const fetchContent = async () => {
-      const post_result = await get_posts();
-      if(post_result.success) setPosts(post_result.data);
+      const result = await get_posts();
+      if (result.success) setPosts(result.data);
+      console.log(result.data);
     };
     fetchContent();
   }, []);

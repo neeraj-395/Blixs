@@ -34,7 +34,7 @@ const ChatBody = ({userid, chatid, currChattingMember, setOnlineUserList}) => {
       <div className="py-2 px-4 border-b hidden lg:block">
         <div className="flex items-center py-1">
           <img
-            src={currChattingMember?.image || `https://robohash.org/${currChattingMember.id}.png`}
+            src={currChattingMember?.image || `https://robohash.org/${currChattingMember.username}.png`}
             className="rounded-full mr-2"
             alt="User"
             width="40"

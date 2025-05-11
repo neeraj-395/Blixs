@@ -57,8 +57,7 @@ class Comment(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     commented_text = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name="replies")
-
+    
     def __str__(self):
         if self.parent:
             return f"{self.user.username} replied to {self.parent.user.username.upper()}'s comment - {self.commented_text[:10]}..."

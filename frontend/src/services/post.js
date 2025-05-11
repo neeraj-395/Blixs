@@ -23,5 +23,5 @@ export const like_post = async (postid) =>
 export const create_comment = async (postid, data) => 
   handle_response(() => axios.post(CommentAPI.create(postid), data, { withCredentials: true }));
 
-export const delete_comment = async (postid) =>
-  handle_response(() => axios.delete(CommentAPI.delete(postid), { withCredentials: true }));
+export const delete_comment = async (commentid) =>
+  handle_response(() => axios.delete(CommentAPI.delete(commentid), { withCredentials: true }));

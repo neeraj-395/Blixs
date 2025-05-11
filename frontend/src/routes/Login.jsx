@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/auth";
+import { useUser } from "../contexts/UserContext";
 
 
 const Login = () => {
+  const { setUser } = useUser();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -15,9 +17,10 @@ const Login = () => {
     }
     const result = await login(username, password);
     if (result.success) {
+      setUser(result.data);
       alert("User Login Successfull.");
       navigate("/");
-    }else{
+    } else {
       alert("User Login Failed.");
       location.reload();
     }

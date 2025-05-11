@@ -1,6 +1,6 @@
 import React, { useState } from "react";  // Import useState here
 import { Link, useNavigate } from "react-router-dom";
-import PostPickPopup from "./PostPickPopup";
+import CreatePostModal from "../modals/CreatePostModal";
 import {
   BsHouseDoor,
   BsChatDots,
@@ -9,19 +9,17 @@ import {
   BsFilePlus
 } from "react-icons/bs";
 import { logout } from "../services/auth";
+import { useUser } from "../contexts/UserContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  
-  const [isPopupOpen, setPopupOpen] = useState(false);
-  const handleFileSelect = (file) => {
-    console.log("Selected file:", file);
-    // You can perform any logic to upload the file or create a post here
-  };
+  const { setUser } = useUser();
+  const [showCreatePost, setShowCreatePost] = useState(false);
 
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
+      setUser(null);
       alert("Logged out successfully!");
       navigate("/login");
     } else {
@@ -61,18 +59,17 @@ const Navbar = () => {
 
         <Link
           type="button"
-          onClick={() => setPopupOpen(true)} // Open the popup when clicked
+          onClick={() => setShowCreatePost(true)} // Open the popup when clicked
           className="flex items-center text-white hover:text-gray-300 mb-6 space-x-3 text-base"
         >
           <BsFilePlus className="text-xl" />
           <span>Create</span>
         </Link>
 
-        {/* PostPickPopup will show if isPopupOpen is true */}
-        <PostPickPopup
-          isOpen={isPopupOpen}
-          onClose={() => setPopupOpen(false)} // Close the popup
-          onFileSelect={handleFileSelect}
+        {/* CreatePostModal will show if showCreatePost is true */}
+        <CreatePostModal
+          isOpen={showCreatePost}
+          onClose={() => setShowCreatePost(false)} // Close the popup
         />
 
         <Link
