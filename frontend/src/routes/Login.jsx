@@ -69,21 +69,19 @@ const Login = () => {
                 <div className="absolute w-3/4 border-t border-gray-500"></div>
               </div>
               <h3 className="h-font text-2xl font-semibold mt-1 text-center text-black">or</h3>
-              <h3 className="h-font text-2xl font-semibold mt-1 text-center text-black">Don't have an account? <a className="text-blue-500 h-font" href="/signup">Sign up</a></h3>
+              <h3 className="h-font text-2xl font-semibold mt-1 text-center text-black">Don't have an account? <a className="text-blue-500 h-font" href="/signup">Sign Up</a></h3>
             </form>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center min-h-screen text-gray-900 ">
           <div className="bg-[url('/images/bg.png')] p-6 rounded-l-3xl shadow-md w-120 h-120 bg-[length:520px_650px] bg-no-repeat">
-            <div className="flex items-center">
-              <img src="/images/algotech.png" alt="ALGO_TECH" className="rounded-full m-5 w-20 h-20"></img>
-              <span className="text-3xl font-bold text-white h-font">BLIXs</span>
+            <div className="flex items-center justify-center mr-8">
+              <img src="/images/logo.png" alt="ALGO_TECH" className="m-5 w-20 h-20"></img>
+              <span className="text-5xl font-bold text-white h-font">Algo Tech</span>
             </div>
-            <h2 className="h-font text-5xl font-semibold mt-28 text-center text-white">Welcome Page</h2>
-            <h3 className="h-font text-2xl font-semibold ml-14  mt-5 text-white">sign in to <br/> continue access</h3>
           </div>
         </div>
-      </div>
+      </div>  
     </div>
   );
 };

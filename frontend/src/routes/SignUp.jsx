@@ -74,9 +74,9 @@ const SignUp = () => {
     </div>
     <div className="flex flex-col items-center justify-center min-h-screen text-gray-900 ">
           <div className="bg-[url('/images/bg.png')] p-6 rounded-l-3xl shadow-md w-120 h-130 bg-[length:520px_650px] bg-no-repeat">
-            <div className="flex items-center">
-              <img src="/images/algotech.png" alt="ALGO_TECH" className="rounded-full m-5 w-20 h-20"></img>
-              <span className="text-3xl font-bold text-white h-font">BLIXs</span>
+            <div className="flex items-center justify-center mr-8">
+              <img src="/images/logo.png" alt="ALGO_TECH" className=" m-5 w-20 h-20"></img>
+              <span className="text-5xl font-bold text-white h-font">Algo Tech</span>
             </div>
             <h2 className="text-5xl font-semibold mt-28 text-center text-white h-font">Welcome Page</h2>
             <h3 className="text-2xl font-semibold text-center mt-35 text-white h-font">Create your account now<br/>to enjoy exciting world of Blixs</h3>

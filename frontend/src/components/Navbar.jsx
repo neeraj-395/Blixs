@@ -34,7 +34,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2 mb-12">
           <img
-            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
+            src="images/logo.png"
             alt="Logo"
             className="w-8 h-8"
           />
